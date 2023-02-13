@@ -1,0 +1,237 @@
+<!-- admin sidebar -->
+<%- include('../partials/adminHeader')%>
+  <!-- end admin sidebar -->
+
+  <div class="col py-3 mt-4">
+
+    <section class="p-5">
+      <div class="container">
+        <div class=" mt-100 mb-5 d-flex align-items-center justify-content-center">
+          <h3 class="text-decoration-underline">Coupon management</h3>
+        </div>
+        <div class="row">
+
+          <div class="container mb-5 border border-secondary">
+            <div class=" d-flex align-items-center justify-content-center">
+              <h5 class="text-decoration-underline">Add coupon</h5>
+            </div>
+
+            <form class="mt-3 mb-3" action="/admin/addCoupon" method="post">
+              <div class="d-flex justify-content-between">
+
+                <div class="d-flex flex-column">
+                  <label>Coupon code</label>
+                  <input class="rounded-2" required name="couponName" style="width: 189px; height: 38px;" type="text">
+                </div>
+
+                <div class="d-flex flex-column">
+                  <label>Discount in %</label>
+                  <input name="discount" required class="rounded-2" style="width: 189px; height: 38px;" type="text">
+                </div>
+
+                <div class="d-flex flex-column">
+                  <label>Maximum limit</label>
+                  <input name="maxLimit" required class="rounded-2" style="width: 189px; height: 38px;" type="text">
+                </div>
+
+                <div class="d-flex flex-column">
+                  <label>Expiry date</label>
+                  <input type="date" required class="rounded-2" style="width: 189px; height: 38px;"
+                    class="form-control border-secondary" id="exdate" name="expirationTime"
+                    aria-describedby="emailHelp" />
+                </div>
+
+                <button class="btn btn-success mt-4" style="width: 75px; height: 38px;" type="submit">Submit</button>
+
+              </div>
+            </form>
+
+          </div>
+        </div>
+        <table class="table  table-striped" id="table">
+          <thead>
+            <tr>
+              <th scope="col">No</th>
+              <th scope="col">Coupon Code</th>
+              <th scope="col">Expiry date</th>
+              <th scope="col">Controlls</th>
+              <th scope="col">remove</th>
+
+            </tr>
+          </thead>
+
+
+          <tbody>
+            <% let count=1 %>
+              <% couponData.forEach(element=> { %>
+                <tr>
+                  <td>
+                    <%=count %>
+                  </td>
+                  <td>
+                    <%=element.couponName %>
+                  </td>
+                  <td>
+                    <%=element.expirationTime %>
+                  </td>
+
+
+                  <td>
+                    <!-- <a href="" class="btn btn-success">Edit</a> -->
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                      data-bs-target="#exampleModa-<%= element._id %>">
+                      Edit
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModa-<%= element._id %>" tabindex="-1"
+                      aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <form action="/admin/editCoupon/<%= element._id %>" method="post">
+                            <div class="modal-body">
+                              <div class="d-flex justify-content-between">
+
+                                <div class="d-flex flex-column">
+                                  <label>Couponcode</label>
+                                  <input class="rounded-2" required value="<%= element.couponName%>" name="couponName"
+                                    style="width: 189px; height: 38px;" type="text">
+                                </div>
+
+                                <div class="d-flex flex-column">
+                                  <label>Discount in %</label>
+                                  <input name="discount" required value="<%=element.discount*100%>" class="rounded-2"
+                                    style="width: 189px; height: 38px;" type="text">
+                                </div>
+
+                              </div>
+
+                              <div class="d-flex justify-content-between">
+                                <div class="d-flex flex-column">
+                                  <label>Maximum limit</label>
+                                  <input name="maxLimit" required value="<%= element.maxLimit%>" class="rounded-2"
+                                    style="width: 189px; height: 38px;" type="text">
+                                </div>
+
+                                <div class="d-flex flex-column">
+                                  <label>Expiry date</label>
+                                  <input type="date" required class="rounded-2" style="width: 189px; height: 38px;"
+                                    class="form-control border-secondary" value="<%= element.expirationTime%>"
+                                    id="exdate" name="expirationTime" aria-describedby="emailHelp" />
+                                </div>
+
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" id="submit" value="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                          </form>
+
+
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <!-- Button trigger modal -->
+                    <% if(element.delete===false) { %>
+                      <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal-<%=element._id%>">
+                        Delete
+                      </button>
+                      <% }else{ %>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                          data-bs-target="#exampleModal-<%=element._id%>">
+                          Restore
+                        </button>
+                        <%}%>
+                          <!-- Modal -->
+                          <div class="modal fade" id="exampleModal-<%=element._id%>" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h1 class="modal-title fs-5" id="exampleModalLabel">Delete confirmation</h1>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                                </div>
+                                <% if(element.delete===false) { %>
+                                  <div class="modal-body">
+                                    Are you sure you want to delete this coupon?
+                                  </div>
+                                  <% }else{ %>
+                                    <div class="modal-body">
+                                      Are you sure you want to restore coupon?
+                                    </div>
+                                    <%}%>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                          data-bs-dismiss="modal">Close</button>
+                                        <% if(element.delete===false) { %>
+                                          <a href="/admin/deleteCoupon/<%=element._id%>"><button type="button"
+                                              class="btn btn-danger">Delete</button></a>
+                                          <% }else{ %>
+                                            <a href="/admin/restoreCoupon/<%=element._id%>"><button type="button"
+                                                class="btn btn-primary">Restore</button></a>
+                                            <%}%>
+                                      </div>
+                              </div>
+                            </div>
+                          </div>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-outline-danger border-0" data-bs-toggle="modal"
+                      data-bs-target="#exampleModaR-<%= element._id %>">
+                      <i class="material-symbols-outlined">
+                        delete_forever
+                      </i>
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModaR-<%= element._id %>" tabindex="-1"
+                      aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Remove</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            Remove Permenently?
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <a href="/admin/removeCoupon/<%=element._id%>"><button type="button"
+                                class="btn btn-danger">Remove</button></a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <% count++ %>
+                  <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+  </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+  <script>
+    $("#menu-btn").click(function () {
+      $("#menu").toggleClass("active");
+    });
+  </script>
+  </body>
+
+  </html>

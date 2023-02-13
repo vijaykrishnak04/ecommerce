@@ -1,0 +1,60 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!--===============================================================================================-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="/log/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" href="/stylesheets/adminCommon.css" type="text/css" />
+  <!--===============================================================================================-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <!--===============================================================================================-->
+  <title>Admin panel</title>
+</head>
+
+<body>
+  <section id="menu">
+    <div class="logo">
+      <img class="img-fluid w-50" src="/images/Moonji_Logo-16.png" alt="logo">
+    </div>
+    <div class="items">
+      <li>
+        <i class="fa fa-home"></i><a href="/admin/home">Dashboard</a>
+      </li>
+      <li>
+        <i class="fa fa-th-large"></i><a href="/admin/productdetails">Products</a>
+      </li>
+      <li>
+        <i class="fa fa-plus"></i><a href="/admin/addProduct">Add Products</a>
+      </li>
+      <li>
+        <i class="fa fa-list-alt"></i><a href="/admin/category">Categories</a>
+      </li>
+      <li>
+        <i class="fa fa-users"></i><a href="/admin/userDetails">Users</a>
+      </li>
+      <li>
+        <i class="fa fa-shopping-cart"></i><a href="/admin/order">Orders</a>
+      </li>
+      <li>
+        <i class="fa fa-gift"></i><a href="/admin/coupon">Coupons</a>
+      </li>
+      <li>
+        <i class="fa fa-sign-out"></i><a href="/admin/adminLogout">Logout</a>
+      </li>
+    </div>
+  </section>
+  <section class="sectionTop" id="interface" style="z-index: 999">
+    <div class="navigation">
+      <div>
+        <input class="searchbar" type="text" placeholder="search">
+      </div>
+      <div class="profile">
+        <i class="fa fa-bell"></i>
+      </div>
+    </div>
+  </section>
+</body>

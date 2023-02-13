@@ -1,0 +1,250 @@
+const users = require("../model/userSchema");
+const bcrypt = require("bcrypt");
+const mailer = require("../middlewares/otpValidation");
+const mongoose = require("mongoose");
+const otp = require("../model/otpSchema");
+const mailSender = require("../config/mailSender");
+const products = require("../model/productSchema");
+const cart = require("../model/cartSchema");
+
+module.exports = {
+  //to render the home page
+  getHome: async (req, res) => {
+    try {
+      let session = req.session.user;
+      let product = await products.find({ delete: false }).populate("category");
+      if (session) {
+        customer = true;
+      } else {
+        customer = false;
+      }
+      res.render("user/home", { customer, product });
+    } catch {
+      console.error();
+      res.render("user/error");
+    }
+  },
+  //to render the login page
+  getLogin: (req, res) => {
+    res.render("user/login");
+  },
+
+  postLogin: async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    const userData = await users.findOne({ email: email });
+    try {
+      if (userData) {
+        if (userData.isBlocked === false) {
+          const passwordMatch = await bcrypt.compare(
+            password,
+            userData.password
+          );
+          if (passwordMatch) {
+            req.session.user = req.body.email;
+            res.redirect("/");
+          } else {
+            res.render("user/login", {
+              invalid: "Invalid username or Password",
+            });
+          }
+        } else {
+          res.render("user/login", { invalid: "You are blocked" });
+        }
+      } else {
+        res.render("user/login", { invalid: "Invalid Email Or Password" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  //logout
+
+  userLogout: (req, res) => {
+    req.session.destroy();
+    res.redirect("/");
+  },
+
+  // to render the signup page
+  getSignup: (req, res) => {
+    res.render("user/signup");
+  },
+
+  postSignup: async (req, res) => {
+    try {
+      const spassword = await bcrypt.hash(req.body.password, 10);
+      const name = req.body.name;
+      const email = req.body.email;
+      const phone = req.body.phone;
+      const password = spassword;
+      const userExists = await users.findOne({ email: email });
+
+      if (userExists) {
+        res.render("user/signup", { invalid: "User Already Exist" });
+      } else {
+        const User = {
+          name: name,
+          email: email,
+          phone: phone,
+          password: password,
+        };
+        const mailer = mailSender(User);
+        let userData = await otp.findOne({ email: email });
+        if (mailer) {
+          res.render("user/otp", { userData });
+        } else {
+          console.log("otp sending failed");
+        }
+      }
+    } catch {
+      console.error();
+      res.render("user/500");
+    }
+  },
+
+  getOtpPage: (req, res) => {
+    try {
+      res.render("user/otp", { userData });
+    } catch (error) {
+      console.log(error);
+      res.render("user/error");
+    }
+  },
+  
+  postOtp: async (req, res) => {
+    try {
+      const body = req.body;
+      const cotp = body.otp;
+      const sendOtp = await otp.findOne({ email: body.email });
+      const validOtp = await bcrypt.compare(cotp, sendOtp.otp);
+      if (validOtp) {
+        res.redirect("/login");
+        users.create({
+          name: body.name,
+          email: body.email,
+          phone: body.phone,
+          password: body.password,
+        });
+      } else {
+        let userData = await otp.findOne({ email: body.email });
+        res.render("user/otp", { userData, invalid: "invalid otp" });
+      }
+    } catch {
+      console.error();
+      res.render("user/error");
+    }
+  },
+
+  //forget password
+
+  forgotPassword: (req, res) => {
+    res.render("user/forgotPassword");
+  },
+  postForgotPassword: async (req, res) => {
+    try {
+      const userEmail = req.body.email;
+      const User = req.body;
+      const isUserExist = await users.findOne({ email: userEmail });
+      if (isUserExist) {
+        const mailer = await mailSender(User);
+        if (mailer) {
+          res.render("user/forgotOtp", { User });
+        }
+      } else {
+        res.render("user/forgotPassword", {
+          error: "please enter a valid Email",
+          userData,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.render("user/error");
+    }
+  },
+
+  postForgotOtp: async (req, res) => {
+    let userData = req.query;
+    try {
+      const body = req.body;
+      const cotp = body.otp;
+      const sendOtp = await otp.findOne({ email: body.email });
+      const validOtp = await bcrypt.compare(cotp, sendOtp.otp);
+      if (validOtp) {
+        res.render("user/changePassword", { userData });
+      } else {
+        res.render("user/forgotOTP", { userData, error: "invalid OTP" });
+      }
+    } catch (error) {
+      res.render("user/error");
+    }
+  },
+  postChangePassword: async (req, res) => {
+    try {
+      const newPassword = req.body.newPassword;
+      const sNewPassword = await bcrypt.hash(newPassword, 10);
+      const filter = { email: req.body.email };
+      const update = { password: sNewPassword };
+      await users
+        .findOneAndUpdate(filter, update, {
+          new: true,
+        })
+        .then(() => {
+          res.redirect("/login");
+        });
+    } catch (error) {
+      console.log(error);
+      res.render("user/error");
+    }
+  },
+
+  //profile view management
+
+  viewProfile: async (req, res) => {
+    try {
+      const session = req.session.user;
+      let userData = await users.findOne({ email: session });
+      res.render("user/profile", { userData });
+    } catch (error) {
+      console.log(error);
+      res.render("user/error");
+    }
+  },
+
+  editProfile: async (req, res) => {
+    const session = req.session.user;
+    let userData = await users.findOne({ email: session });
+    res.render("user/editProfile", { userData });
+  },
+
+  postEditProfile: async (req, res) => {
+    try {
+      const session = req.session.user;
+      await users.updateOne(
+        { email: session },
+        {
+          $set: {
+            name: req.body.name,
+            phonenumber: req.body.phone,
+            addressDetails: [
+              {
+                housename: req.body.housename,
+                area: req.body.area,
+                landmark: req.body.landmark,
+                district: req.body.district,
+                state: req.body.state,
+                postoffice: req.body.postoffice,
+                pin: req.body.pin,
+              },
+            ],
+          },
+        }
+      );
+
+      res.redirect("/viewProfile");
+    } catch (error) {
+      console.log(error);
+      res.render("user/error");
+    }
+  },
+};

@@ -1,0 +1,27 @@
+<%- include ("../layout/layout") %> 
+<div class="d-flex justify-content-center align-items-center mt-5">
+<div class="card text-center" style="width: 300px;">
+    <div class="card-header h5 text-white bg-warning">Enter OTP</div>
+    <div class="card-body px-5">
+        <p class="card-text py-2">
+            Enter OTP recieved on your email:
+        </p>
+        <form action="/postForgotOtp" method="post">
+            <%if(locals.User){%> 
+                <input type="hidden" name="email" id="email" class="form-control" value="<%=User.email%>"/>
+                <%}%>
+            <input name="otp" type="text" placeholder="OTP" id="otp" class="form-control my-3" />
+            <% if(locals.error){%>
+                <small class="text-danger"><%=error%></small>
+            <%}%>
+        <button type="submit"  class="btn btn-warning w-100 text-white">Reset</button>
+    </form>
+ 
+        <div class="d-flex justify-content-between mt-4">
+            <a class="/login" href="#">Login</a>
+            <a class="/signup" href="#">Register</a>
+        </div>
+    </div>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>

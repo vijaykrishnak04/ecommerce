@@ -329,25 +329,15 @@ module.exports = {
           },
         ])
         .then((data) => {});
-      if (data.count > 0) {
-        cart
-          .updateOne(
-            { _id: data.cart, "product.productId": objId },
-            { $inc: { "product.$.quantity": data.count } }
-          )
-          .then(() => {
-            res.json({ status: true });
-          });
-      }else{
-        cart
-          .deleteOne(
-            { _id: data.cart, "product.productId": objId },
-            { $inc: { "product.$.quantity": data.count } }
-          )
-          .then(() => {
-            res.json({ status: true });
-          });
-      }
+        
+      cart
+        .updateOne(
+          { _id: data.cart, "product.productId": objId },
+          { $inc: { "product.$.quantity": data.count } }
+        )
+        .then(() => {
+          res.json({ status: true });
+        });
     } catch (error) {
       console.log(error);
       res.render("user/error");
@@ -376,5 +366,4 @@ module.exports = {
       res.render("user/error");
     }
   },
-  
 };

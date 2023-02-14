@@ -89,33 +89,27 @@ module.exports = {
           phone: phone,
           password: password,
         };
-        const mailer = mailSender(User);
-        let userData = await otp.findOne({ email: email });
-        if (mailer) {
-          res.render("user/otp", { userData });
-        } else {
-          console.log("otp sending failed");
-        }
+        mailSender(User).then(async(mailer)=>{
+          if (mailer) {
+            let userData = await otp.findOne({ email: email });
+            console.log(userData)
+            res.render("user/otp", { userData });
+          } else {
+            console.log("otp sending failed");
+          }
+        })
       }
-    } catch {
-      console.error();
+    } catch (error) {
+      console.log(error);
       res.render("user/500");
     }
   },
 
-  getOtpPage: (req, res) => {
-    try {
-      res.render("user/otp", { userData });
-    } catch (error) {
-      console.log(error);
-      res.render("user/error");
-    }
-  },
-  
   postOtp: async (req, res) => {
     try {
       const body = req.body;
       const cotp = body.otp;
+      console.log(cotp);
       const sendOtp = await otp.findOne({ email: body.email });
       const validOtp = await bcrypt.compare(cotp, sendOtp.otp);
       if (validOtp) {
@@ -130,8 +124,8 @@ module.exports = {
         let userData = await otp.findOne({ email: body.email });
         res.render("user/otp", { userData, invalid: "invalid otp" });
       }
-    } catch {
-      console.error();
+    } catch (error) {
+      console.log(error);
       res.render("user/error");
     }
   },
@@ -246,5 +240,20 @@ module.exports = {
       console.log(error);
       res.render("user/error");
     }
+  },
+
+  addNewAddress: async (req, res) => {
+    const session = req.session.user
+    const addObj = {
+      housename: req.body.housename,
+      area: req.body.area,
+      landmark: req.body.landmark,
+      district: req.body.district,
+      state: req.body.state,
+      postoffice: req.body.postoffice,
+      pin: req.body.pin
+    }
+    await users.updateOne({ email: session }, { $push: { addressDetails: addObj } })
+    res.redirect('/checkout')
   },
 };

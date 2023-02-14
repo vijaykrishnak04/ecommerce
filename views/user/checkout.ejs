@@ -24,152 +24,167 @@
 
     <!--================Checkout Area =================-->
     <section class="checkout_area section_gap">
-        <div class="container">
-            <div class="returning_customer">
-                <div class="check_title">
-                    <h2>Returning Customer? <a href="#">Click here to login</a></h2>
+        <div class="col-md-12">
+            <h2 class="h3 mb-3 text-black"> Address</h2>
+            <div class="p-3 p-lg-5 border">
+
+              <label class="col-xs-3 control-label">Your Address</label>
+
+              <select class="form-select mt-2" required name="address">
+                <% userData.addressDetails.forEach((address)=>{%>
+                  <option name="address">
+                    <%= address.housename %>,<%= address.postoffice%>,<%= address.landmark %>,<%=address.area %>,<%=
+                              address.district %>,<%= address.pin %>,<%=address.state %>
+                  </option>
+                  <% }) %>
+              </select>
+              <button type="button" class="btn btn-secondary mt-3" data-bs-toggle="modal"
+                data-bs-target="#exampleModal" data-bs-whatever="@mdo">
+                Add new address
+              </button>
+            </div>
+
+            <div class="row mb-5">
+              <div class="col-md-12">
+                <h2 class="h3 mb-3 text-black">Your Order</h2>
+                <div class="p-3 p-lg-5 border">
+                  <h2>Payment</h2>
+                  <form id="placeOrder">
+                    <label class="col-xs-3 control-label">Select Shipping Address</label>
+
+                    <select class="form-select mt-2" required name="address">
+                      <% userData.addressDetails.forEach((address)=>{%>
+                        <option name="address">
+                          <%= address.housename %>,<%= address.postoffice%>,<%= address.landmark %>,<%=address.area
+                                  %>,<%= address.district %>,<%= address.pin %>,<%=address.state %>
+                        </option>
+                        <% }) %>
+                    </select>
+
+                    <div class="d-block my-3">
+                      <div class="custom-control custom-radio">
+                        <input id="credit" name="paymentMethod" type="radio" value="COD"
+                          class="custom-control-input" checked required />
+                        <label class="custom-control-label" for="credit">COD</label>
+                      </div>
+                      <div class="custom-control custom-radio">
+                        <input id="debit" name="paymentMethod" type="radio" value="Online"
+                          class="custom-control-input" required />
+                        <label class="custom-control-label" for="debit">Online</label>
+                      </div>
+                      <div class="form-group mt-4">
+                        <label for="coupon text-light" style="text-decoration: underline;">
+                          <h4>Apply Coupon</h4>
+                        </label>
+                        <input type="text" class="form-control" id="coupon" aria-describedby="coupon"
+                          placeholder="Enter Coupon" name="coupon">
+                        <small id="coupon" class="text-info">enter coupon code to avail offers</small>
+                      </div>
+                      <h5 class="text-muted mt-4">Amount to be paid</h5>
+                      <table class="table site-block-order-table mb-5">
+                        <thead>
+                          <th>Product</th>
+                          <th>Total</th>
+                        </thead>
+                        <tbody>
+                          <% productData.forEach(function(product) {%>
+                            <tr>
+                              <td>
+                                <%=product.productDetail.name%> <strong class="mx-2">x</strong>
+                                  <%= product.productQuantity%>
+                              </td>
+                              <% var a=product.productDetail.price%>
+                                <% var b=product.productQuantity%>
+                                  <% var c=a*b %>
+                                    <td>
+                                      <%= c %>₹
+                                    </td>
+                            </tr>
+                            <% }) %>
+                              <tr>
+                                <td><b>Total Amout</b></td>
+                                <td>
+                                  <%=sum%> ₹
+                                </td>
+                              </tr>
+                        </tbody>
+                      </table>
+                      <button class="btn btn-primary btn-lg py-3 btn-block mt-5" type="submit" value="submit">Place Order</button>
+                    </div>
+                  </form>
                 </div>
-                <p>If you have shopped with us before, please enter your details in the boxes below. If you are a new
-                    customer, please proceed to the Billing & Shipping section.</p>
-                <form class="row contact_form" action="#" method="post" novalidate="novalidate">
-                    <div class="col-md-6 form-group p_star">
-                        <input type="text" class="form-control" id="name" name="name">
-                        <span class="placeholder" data-placeholder="Username or Email"></span>
+              </div>
+              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        Add new Address
+                      </h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="col-md-6 form-group p_star">
-                        <input type="password" class="form-control" id="password" name="password">
-                        <span class="placeholder" data-placeholder="Password"></span>
-                    </div>
-                    <div class="col-md-12 form-group">
-                        <button type="submit" value="submit" class="primary-btn">login</button>
-                        <div class="creat_account">
-                            <input type="checkbox" id="f-option" name="selector">
-                            <label for="f-option">Remember me</label>
+                    <form action="/addNewAddress" method="post">
+                      <div class="modal-body">
+                        <div class="mb-3">
+                          <label for="recipient-name" class="col-form-label">Housename:</label>
+                          <input required type="text" class="form-control" id="housename" name="housename" />
+                          <p id="houseError" style="color: red"></p>
                         </div>
-                        <a class="lost_pass" href="#">Lost your password?</a>
-                    </div>
-                </form>
-            </div>
-            <div class="cupon_area">
-                <div class="check_title">
-                    <h2>Have a coupon? <a href="#">Click here to enter your code</a></h2>
-                </div>
-                <input type="text" placeholder="Enter coupon code">
-                <a class="tp_btn" href="#">Apply Coupon</a>
-            </div>
-            <div class="billing_details">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <h3>Billing Details</h3>
-                        <form class="row contact_form" action="#" method="post" novalidate="novalidate">
-                            <div class="col-md-6 form-group p_star">
-                                <input type="text" class="form-control" id="first" name="name">
-                                <span class="placeholder" data-placeholder="First name"></span>
-                            </div>
-                            <div class="col-md-6 form-group p_star">
-                                <input type="text" class="form-control" id="last" name="name">
-                                <span class="placeholder" data-placeholder="Last name"></span>
-                            </div>
-                            <div class="col-md-12 form-group">
-                                <input type="text" class="form-control" id="company" name="company" placeholder="Company name">
-                            </div>
-                            <div class="col-md-6 form-group p_star">
-                                <input type="text" class="form-control" id="number" name="number">
-                                <span class="placeholder" data-placeholder="Phone number"></span>
-                            </div>
-                            <div class="col-md-6 form-group p_star">
-                                <input type="text" class="form-control" id="email" name="compemailany">
-                                <span class="placeholder" data-placeholder="Email Address"></span>
-                            </div>
-                            <div class="col-md-12 form-group p_star">
-                                <select class="country_select">
-                                    <option value="1">Country</option>
-                                    <option value="2">Country</option>
-                                    <option value="4">Country</option>
-                                </select>
-                            </div>
-                            <div class="col-md-12 form-group p_star">
-                                <input type="text" class="form-control" id="add1" name="add1">
-                                <span class="placeholder" data-placeholder="Address line 01"></span>
-                            </div>
-                            <div class="col-md-12 form-group p_star">
-                                <input type="text" class="form-control" id="add2" name="add2">
-                                <span class="placeholder" data-placeholder="Address line 02"></span>
-                            </div>
-                            <div class="col-md-12 form-group p_star">
-                                <input type="text" class="form-control" id="city" name="city">
-                                <span class="placeholder" data-placeholder="Town/City"></span>
-                            </div>
-                            <div class="col-md-12 form-group p_star">
-                                <select class="country_select">
-                                    <option value="1">District</option>
-                                    <option value="2">District</option>
-                                    <option value="4">District</option>
-                                </select>
-                            </div>
-                            <div class="col-md-12 form-group">
-                                <input type="text" class="form-control" id="zip" name="zip" placeholder="Postcode/ZIP">
-                            </div>
-                            <div class="col-md-12 form-group">
-                                <div class="creat_account">
-                                    <input type="checkbox" id="f-option2" name="selector">
-                                    <label for="f-option2">Create an account?</label>
-                                </div>
-                            </div>
-                            <div class="col-md-12 form-group">
-                                <div class="creat_account">
-                                    <h3>Shipping Details</h3>
-                                    <input type="checkbox" id="f-option3" name="selector">
-                                    <label for="f-option3">Ship to a different address?</label>
-                                </div>
-                                <textarea class="form-control" name="message" id="message" rows="1" placeholder="Order Notes"></textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="order_box">
-                            <h2>Your Order</h2>
-                            <ul class="list">
-                                <li><a href="#">Product <span>Total</span></a></li>
-                                <li><a href="#">Fresh Blackberry <span class="middle">x 02</span> <span class="last">$720.00</span></a></li>
-                                <li><a href="#">Fresh Tomatoes <span class="middle">x 02</span> <span class="last">$720.00</span></a></li>
-                                <li><a href="#">Fresh Brocoli <span class="middle">x 02</span> <span class="last">$720.00</span></a></li>
-                            </ul>
-                            <ul class="list list_2">
-                                <li><a href="#">Subtotal <span>$2160.00</span></a></li>
-                                <li><a href="#">Shipping <span>Flat rate: $50.00</span></a></li>
-                                <li><a href="#">Total <span>$2210.00</span></a></li>
-                            </ul>
-                            <div class="payment_item">
-                                <div class="radion_btn">
-                                    <input type="radio" id="f-option5" name="selector">
-                                    <label for="f-option5">Check payments</label>
-                                    <div class="check"></div>
-                                </div>
-                                <p>Please send a check to Store Name, Store Street, Store Town, Store State / County,
-                                    Store Postcode.</p>
-                            </div>
-                            <div class="payment_item active">
-                                <div class="radion_btn">
-                                    <input type="radio" id="f-option6" name="selector">
-                                    <label for="f-option6">Paypal </label>
-                                    <img src="img/product/card.jpg" alt="">
-                                    <div class="check"></div>
-                                </div>
-                                <p>Pay via PayPal; you can pay with your credit card if you don’t have a PayPal
-                                    account.</p>
-                            </div>
-                            <div class="creat_account">
-                                <input type="checkbox" id="f-option4" name="selector">
-                                <label for="f-option4">I’ve read and accept the </label>
-                                <a href="#">terms & conditions*</a>
-                            </div>
-                            <a class="primary-btn" href="#">Proceed to Paypal</a>
+                        <div class="mb-3">
+                          <label for="recipient-name" class="col-form-label">Area:</label>
+                          <input required type="text" class="form-control" id="area" name="area" />
+                          <p id="areaError" style="color: red"></p>
                         </div>
-                    </div>
+                        <div class="mb-3">
+                          <label for="recipient-name" class="col-form-label">Landmark:</label>
+                          <input required type="text" class="form-control" id="landmark" name="landmark" />
+                          <p id="landmarkError" style="color: red"></p>
+                        </div>
+                        <div class="mb-3">
+                          <div class="row">
+                            <div class="col-md-6 mb-3">
+                              <label for="firstName">District</label>
+                              <input required type="text" class="form-control" id="district" name="district" />
+                              <p id="stateError" style="color: red"></p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                              <label for="lastName">State</label>
+                              <input required type="text" class="form-control" id="state" name="state" />
+                              <p id="pincodeError" style="color: red"></p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <div class="row">
+                            <div class="col-md-6 mb-3">
+                              <label for="firstName">Post office</label>
+                              <input required type="text" class="form-control" id="postoffice" name="postoffice" />
+                              <p id="stateError" style="color: red"></p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                              <label for="lastName">Pincode</label>
+                              <input required type="text" class="form-control" id="pin" name="pin" />
+                              <p id="pincodeError" style="color: red"></p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                          Close
+                        </button>
+                        <button type="submit" value="submit" class="btn btn-primary">
+                          Add
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
+              </div>
+
             </div>
-        </div>
+          </div>
     </section>
     <!--================End Checkout Area =================-->
 

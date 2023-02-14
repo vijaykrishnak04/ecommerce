@@ -1,6 +1,7 @@
 var express      = require('express');
 const userController = require('../controllers/userController');
 const productController = require('../controllers/productController')
+const orderController = require('../controllers/orderController')
 const router = express() 
 const verifyLogin= require("../middlewares/session");
 
@@ -10,7 +11,7 @@ router.use(express.urlencoded({extended:true}));
 
 router.get('/',userController.getHome);
 
-router.get('/',verifyLogin.verifyLoginUser,userController.getHome);
+// router.get('/',verifyLogin.verifyLoginUser,userController.getHome);
 
 router.get('/login',verifyLogin.verifyNotLoginUser,userController.getLogin);
 
@@ -21,8 +22,6 @@ router.get('/logout',verifyLogin.verifyLoginUser,userController.userLogout)
 router.get('/signup',verifyLogin.verifyNotLoginUser,userController.getSignup);
 
 router.post('/signup',userController.postSignup);
-
-router.get('/otpPage', userController.getOtpPage);
 
 router.post('/otp', userController.postOtp);
 
@@ -38,7 +37,7 @@ router.post('/postChangePassword',userController.postChangePassword);
 
 router.get('/viewProfile',verifyLogin.verifyLoginUser,userController.viewProfile);
 
-router.get('/editProfile',userController.editProfile);
+router.get('/editProfile',verifyLogin.verifyLoginUser,userController.editProfile);
 
 router.post('/postEditProfile',userController.postEditProfile) 
 
@@ -61,7 +60,15 @@ router.post('/removeProduct', productController.removeProduct);
 
 router.post('/changeQuantity',productController.changeQuantity);
 
-// router.post('/changeQuantity',productController.changeQuantity);
+//checkout page and order management
+
+router.post('/addNewAddress', userController.addNewAddress); 
+
+router.post("/placeOrder", verifyLogin.verifyLoginUser,orderController.placeOrder);
+
+router.get('/checkout',verifyLogin.verifyLoginUser,orderController.getCheckOutPage);
+
+router.get('/orderSuccess',verifyLogin.verifyLoginUser,orderController.orderSuccess)
 
 
 module.exports = router;

@@ -6,6 +6,7 @@ const categoryController = require('../controllers/categoryController')
 const couponController = require('../controllers/couponController')
 const verifylogin     = require('../middlewares/session');
 const upload = require('../config/multer')
+const orderController = require('../controllers/orderController')
 
 //get admin pages
 
@@ -21,9 +22,9 @@ adminRouter.get('/adminLogout',verifylogin.verifyLoginAdmin,adminController.admi
 
 adminRouter.get('/userDetails',verifylogin.verifyLoginAdmin,adminController.getAllUsers)
 
-adminRouter.get('/blockUser/:id',verifylogin.verifyLoginAdmin,adminController.blockUser)
+adminRouter.delete('/blockUser/:id',verifylogin.verifyLoginAdmin,adminController.blockUser)
 
-adminRouter.get('/unblockUser/:id',verifylogin.verifyLoginAdmin,adminController.unblockUser)
+adminRouter.put('/unblockUser/:id',verifylogin.verifyLoginAdmin,adminController.unblockUser)
 
 //product management
 
@@ -66,6 +67,12 @@ adminRouter.get('/deleteCoupon/:id',verifylogin.verifyLoginAdmin,couponControlle
 adminRouter.get('/restoreCoupon/:id',verifylogin.verifyLoginAdmin,couponController.restoreCoupon);
 
 adminRouter.get('/removeCoupon/:id',verifylogin.verifyLoginAdmin,couponController.removeCoupon)
+
+//order management
+
+adminRouter.get('/order',verifylogin.verifyLoginAdmin,orderController.getOrders)
+
+adminRouter.get('/orderedProduct/:id',verifylogin.verifyLoginAdmin,orderController.getOrderedProduct)
 
 module.exports = adminRouter;
 

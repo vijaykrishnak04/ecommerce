@@ -4,6 +4,7 @@ const products = require("../model/productSchema");
 const fs = require("fs");
 const cart = require("../model/cartSchema");
 const users = require("../model/userSchema");
+const { log } = require("console");
 
 let countInCart;
 let countInWishlist;
@@ -190,7 +191,6 @@ module.exports = {
   getProductViewPage: async (req, res) => {
     try {
       let id = req.params.id;
-      console.log(id);
       let product = await products.findOne({ _id: id }).populate("category");
       console.log(product);
       res.render("user/productView", {
@@ -210,7 +210,6 @@ module.exports = {
     try {
       const session = req.session.user;
       const userData = await users.findOne({ email: session });
-      console.log(userData.id);
       const productData = await cart
         .aggregate([
           {
@@ -254,13 +253,10 @@ module.exports = {
         return accumulator + object.productPrice;
       }, 0);
       countInCart = productData.length;
-      let id = req.params.id;
-      let product = await products.findOne({ _id: id });
       res.render("user/cart", {
         productData,
         sum,
         countInCart,
-        products: product,
         countInWishlist,
       });
     } catch (error) {
@@ -291,6 +287,11 @@ module.exports = {
               $unwind: "$product",
             },
           ]);
+          await cart.updateOne(
+            { userId: userData._id, "product.productId": objId },
+            { $inc: { "product.$.quantity": 1 } }
+          );
+          res.redirect("/viewcart");
         } else {
           cart
             .updateOne({ userId: userData._id }, { $push: { product: proObj } })
@@ -317,6 +318,7 @@ module.exports = {
       res.render("user/error");
     }
   },
+  
 
   changeQuantity: async (req, res) => {
     try {

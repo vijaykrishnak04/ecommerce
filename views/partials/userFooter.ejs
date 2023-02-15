@@ -202,5 +202,47 @@
       },
     });
   }
+
+  $("#placeOrder").submit((e) => { 
+    e.preventDefault();
+    $.ajax({
+      url: '/placeOrder',
+      method: 'post',
+      data: $('#placeOrder').serialize(),
+      success: (response) => {
+        if (response.couponDeleted) {
+          swal({
+            title: "coupon no longer exist!",
+            icon: "error",
+            confirmButtonText: "continue",
+          }).then(function () {
+            location.reload();
+          });
+        } else if (response.coupon) {
+          swal({
+            title: "Coupon already used!",
+            icon: "error",
+            confirmButtonText: "continue",
+          }).then(function () {
+            location.reload()
+          });
+        } else if (response.invalid) {
+          swal({
+            title: "Invalid Coupon",
+            icon: "error",
+            confirmButtonText: "continue",
+          }).then(function () {
+            location.reload();
+          });
+        } else if (response.success) {
+          location.href = "/orderSuccess"
+        } else if (response.url) {
+          window.location = response.url
+        } else {
+          location.href = "/viewCart";
+        }
+      }
+    })
+  }) 
 </script>
 

@@ -70,5 +70,10 @@ router.get('/checkout',verifyLogin.verifyLoginUser,orderController.getCheckOutPa
 
 router.get('/orderSuccess',verifyLogin.verifyLoginUser,orderController.orderSuccess)
 
+router.get('/orderDetails', verifyLogin.verifyLoginUser,orderController.orderDetails);
+
+router.get('/orderedProduct/:id',verifyLogin.verifyLoginUser,orderController.orderedProduct);
+
+router.get('/cancelOrder/:id',verifyLogin.verifyLoginUser,orderController.cancelOrder);
 
 module.exports = router;

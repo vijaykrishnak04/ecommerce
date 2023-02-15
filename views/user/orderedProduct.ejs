@@ -1,0 +1,302 @@
+<%- include ("../layout/layout2") %>
+
+<body>
+  <!-- Start Header Area -->
+  <%- include ("../partials/userHeader") %>
+  <style>
+    @media (min-width: 1025px) {
+    }
+
+    .horizontal-timeline .items {
+      border-top: 2px solid #ddd;
+    }
+
+    .horizontal-timeline .items .items-list {
+      position: relative;
+      margin-right: 0;
+    }
+
+    .horizontal-timeline .items .items-list:before {
+      content: "";
+      position: absolute;
+      height: 8px;
+      width: 8px;
+      border-radius: 50%;
+      background-color: #ddd;
+      top: 0;
+      margin-top: -5px;
+    }
+
+    .horizontal-timeline .items .items-list {
+      padding-top: 15px;
+    }
+  </style>
+  <!-- End Header Area -->
+
+  <!-- Start Banner Area -->
+  <section class="banner-area organic-breadcrumb">
+    <div class="container">
+      <div
+        class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end"
+      >
+        <div class="col-first">
+          <h1>Confirmation</h1>
+          <nav class="d-flex align-items-center">
+            <a href="index.html"
+              >Home<span class="lnr lnr-arrow-right"></span
+            ></a>
+            <a href="category.html">Confirmation</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End Banner Area -->
+
+  <!--================Order Details Area =================-->
+
+  <section class="h-100 h-custom" style="background-color: #eee">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-lg-8 col-xl-6">
+          <div
+            class="card border-top border-bottom border-3"
+            style="border-color: #f37a27 !important"
+          >
+            <div class="card-body p-5">
+              <% productData.forEach((order)=>{ %>
+              <p class="lead fw-bold" style="color: #f37a27">Order Details</p>
+              <a href="/productview/<%= order.productDetail._id %>"
+                ><img
+                  style="height: 100px; width: 100px"
+                  src="/<%= order.productDetail.image[0] %>"
+                  class="img-fluid mb-3"
+                  alt=""
+              /></a>
+              <div class="d-flex">
+                <h6><%= order.productDetail.name %></h6>
+
+                <h6 class="ml-5">
+                  Size :<%= orderDetails[0].orderItems.size%>
+                </h6>
+              </div>
+              <div class="row">
+                <div class="col mb-3">
+                  <p class="small text-muted mb-1">Delivery Date</p>
+                  <p><%= orderDetails[0].deliveryDate %></p>
+                </div>
+                <div class="col mb-3">
+                  <p class="small text-muted mb-1">Order No.</p>
+                  <p><%= order.productDetail._id %></p>
+                </div>
+              </div>
+              <div>
+                <h6 class="text-decoration-underline">
+                  Delivery address for this order
+                </h6>
+              </div>
+              <% let phone='Ph:' %>
+              <div class="ms-3">
+                <p>
+                  <%=productData[0].name %>,<br /><%=productData[0].address
+                  %>,<br /><%=phone %> <%=orderDetails[0].phoneNumber%>
+                </p>
+              </div>
+
+              <div class="mx-n5 px-5 py-4" style="background-color: #f2f2f2">
+                <div class="row">
+                  <div class="col-md-8 col-lg-9">
+                    <p><%= order.productDetail.name %></p>
+                  </div>
+                  <div class="col-md-4 col-lg-3">
+                    <p>
+                      <%= order.productDetail.price %> X <%=
+                      order.productQuantity %>
+                    </p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-8 col-lg-9">
+                    <p class="mb-0">Shipping</p>
+                  </div>
+                  <div class="col-md-4 col-lg-3">
+                    <p class="mb-0">0₹</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row my-4">
+                <div class="col-md-4 offset-md-8 col-lg-3 offset-lg-9">
+                  <% var a=order.productQuantity%> <% var
+                  b=order.productDetail.price%> <% var c=a*b %>
+                  <p class="lead fw-bold mb-0" style="color: #f37a27">
+                    <%=c %>₹
+                  </p>
+                </div>
+              </div>
+              <% }) %>
+              <p class="lead fw-bold mb-4 pb-2" style="color: #f37a27">
+                Tracking Order
+              </p>
+
+              <div class="row">
+                <div class="col-lg-12">
+                  <% if (orderDetails[0].orderStatus==="cancelled") { %>
+
+                  <div class="horizontal-timeline">
+                    <ul
+                      class="list-inline items d-flex justify-content-between"
+                    >
+                      <li class="list-inline-item items-list">
+                        <p
+                          class="py-1 px-2 rounded text-white"
+                          style="background-color: #f37a27"
+                        >
+                          <%=orderDetails[0].orderStatus%>
+                        </p>
+                      </li>
+                    </ul>
+                  </div>
+                  <% } else if (orderDetails[0].orderStatus=="placed") { %>
+
+                  <div class="horizontal-timeline">
+                    <ul
+                      class="list-inline items d-flex justify-content-between"
+                    >
+                      <li class="list-inline-item items-list">
+                        <p
+                          class="py-1 px-2 rounded text-white"
+                          style="background-color: #f37a27"
+                        >
+                          <%=orderDetails[0].orderStatus%>
+                        </p>
+                      </li>
+                    </ul>
+                  </div>
+                  <% } else if (orderDetails[0].orderStatus=="pending") { %>
+
+                  <div class="horizontal-timeline">
+                    <ul
+                      class="list-inline items d-flex justify-content-between"
+                    >
+                      <li class="list-inline-item items-list">
+                        <p
+                          class="py-1 px-2 rounded text-white"
+                          style="background-color: #f37a27"
+                        >
+                          <%=orderDetails[0].orderStatus%>
+                        </p>
+                      </li>
+                    </ul>
+                  </div>
+                  <% } else if (orderDetails[0].orderStatus=="shipped") { %>
+                  <div class="horizontal-timeline">
+                    <ul
+                      class="list-inline items d-flex justify-content-between"
+                    >
+                      <li class="list-inline-item items-list">
+                        <p
+                          class="py-1 px-2 rounded text-white"
+                          style="background-color: #f37a27"
+                        >
+                          pending
+                        </p>
+                      </li>
+                      <li class="list-inline-item items-list">
+                        <p
+                          class="py-1 px-2 rounded text-white"
+                          style="background-color: #f37a27"
+                        >
+                          Shipped
+                        </p>
+                      </li>
+                    </ul>
+                  </div>
+                  <% } else if (orderDetails[0].orderStatus=="out for Delivery")
+                  { %>
+                  <div class="horizontal-timeline">
+                    <ul
+                      class="list-inline items d-flex justify-content-between"
+                    >
+                      <li class="list-inline-item items-list">
+                        <p
+                          class="py-1 px-2 rounded text-white"
+                          style="background-color: #f37a27"
+                        >
+                          pending
+                        </p>
+                      </li>
+                      <li class="list-inline-item items-list">
+                        <p
+                          class="py-1 px-2 rounded text-white"
+                          style="background-color: #f37a27"
+                        >
+                          Shipped
+                        </p>
+                      </li>
+                      <li class="list-inline-item items-list">
+                        <p
+                          class="py-1 px-2 rounded text-white"
+                          style="background-color: #f37a27"
+                        >
+                          out For Delivery
+                        </p>
+                      </li>
+                    </ul>
+                  </div>
+                  <% } else{ %>
+                  <div class="horizontal-timeline">
+                    <ul
+                      class="list-inline items d-flex justify-content-between"
+                    >
+                      <li class="list-inline-item items-list">
+                        <p
+                          class="py-1 px-2 rounded text-white"
+                          style="background-color: #f37a27"
+                        >
+                          pending
+                        </p>
+                      </li>
+                      <li class="list-inline-item items-list">
+                        <p
+                          class="py-1 px-2 rounded text-white"
+                          style="background-color: #f37a27"
+                        >
+                          Shipped
+                        </p>
+                      </li>
+                      <li class="list-inline-item items-list">
+                        <p
+                          class="py-1 px-2 rounded text-white"
+                          style="background-color: #f37a27"
+                        >
+                          out For Delivery
+                        </p>
+                      </li>
+                      <li
+                        class="list-inline-item items-list text-end"
+                        style="margin-right: 8px"
+                      >
+                        <p style="margin-right: -8px">Delivered</p>
+                      </li>
+                    </ul>
+                  </div>
+                  <% } %>
+                </div>
+              </div>
+
+              <p class="mt-4 pt-2 mb-0">
+                Want any help?
+                <a href="/contact" style="color: #f37a27">Please contact us</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--================End Order Details Area =================-->
+
+  <!-- start footer Area -->
+  <%- include ("../partials/userFooter") %>
+</body>

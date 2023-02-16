@@ -7,10 +7,13 @@ const mailSender = require("../config/mailSender");
 const products = require("../model/productSchema");
 const cart = require("../model/cartSchema");
 
+let countInCart = 0;
+
 module.exports = {
   //to render the home page
   getHome: async (req, res) => {
     try {
+  
       let session = req.session.user;
       let product = await products.find({ delete: false }).populate("category");
       if (session) {
@@ -41,6 +44,9 @@ module.exports = {
             userData.password
           );
           if (passwordMatch) {
+            console.log(userData._id);
+            countInCart = cart.findOne({userId: userData._id})
+            console.log(countInCart);
             req.session.user = req.body.email;
             res.redirect("/");
           } else {

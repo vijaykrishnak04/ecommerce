@@ -74,5 +74,7 @@ adminRouter.get('/order',verifylogin.verifyLoginAdmin,orderController.getOrders)
 
 adminRouter.get('/orderedProduct/:id',verifylogin.verifyLoginAdmin,orderController.getOrderedProduct)
 
+adminRouter.post('/orderStatuschange/:id',orderController.orderStatusChanging)
+
 module.exports = adminRouter;
 

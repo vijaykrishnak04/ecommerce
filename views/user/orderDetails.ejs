@@ -100,7 +100,7 @@
                     <p class="text-muted mb-0">
                       <% if(product.orderStatus=='placed'
                       ||product.orderStatus=='pending'
-                      ||product.orderStatus=='Shipped'||product.orderStatus=='outForDelivery'
+                      ||product.orderStatus=='shipped'||product.orderStatus=='out for Delivery'
                       ){ %>
                       <a
                         data-bs-toggle="modal"
@@ -109,8 +109,10 @@
                       >
                         Cancel
                       </a>
-                      <% }else{%>
-                      <b>Order Cancelled</b>
+                      <% }else if(product.orderStatus=='delivered'){%>
+                      <b>Delivered</b>
+                      <% }else {%>
+                        <b>Order Cancelled</b>
                       <% } %>
                       <!-- Modal -->
                     </p>
@@ -125,14 +127,9 @@
                         <div class="modal-content">
                           <div class="modal-header">
                             <h1 class="modal-title fs-5" id="exampleModalLabel">
-                              Delete confirmation
+                              Confirmation
                             </h1>
-                            <button
-                              type="button"
-                              class="btn-close"
-                              data-bs-dismiss="modal"
-                              aria-label="Close"
-                            ></button>
+
                           </div>
                           <div class="modal-body">
                             Are you sure you want to cancel this order ?

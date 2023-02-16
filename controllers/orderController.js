@@ -224,6 +224,7 @@ module.exports = {
   },
 
   orderSuccess: async (req, res) => {
+    res.render("user/orderSuccess", { countInCart, countInWishlist });
     const query = req.query;
     const orderId = query.orderId;
     await order.updateOne(
@@ -231,8 +232,6 @@ module.exports = {
       { $set: { orderStatus: "placed", paymentStatus: "paid" } }
     );
     await cart.deleteOne({ userId: query.cartId });
-
-    res.render("user/orderSuccess", { countInCart, countInWishlist });
   },
   orderDetails: async (req, res) => {
     const session = req.session.user;
@@ -545,5 +544,20 @@ module.exports = {
       { $set: { orderStatus: "cancelled" } }
     );
     res.redirect("/orderDetails");
+  },
+
+  orderStatusChanging: async (req, res) => {
+    const id = req.params.id;
+    const data = req.body;
+    await order.updateOne(
+      { _id: id },
+      {
+        $set: {
+          orderStatus: data.orderStatus,
+          paymentStatus: data.paymentStatus,
+        }
+      }
+    )
+    res.redirect("/admin/order");
   },
 };

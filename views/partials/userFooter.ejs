@@ -234,13 +234,9 @@
           }).then(function () {
             location.reload();
           });
-        } else if (response.success) {
-          location.href = "/orderSuccess"
-        } else if (response.url) {
-          window.location = response.url
         } else {
-          location.href = "/viewCart";
-        }
+          location.href = "/orderSuccess"
+        } 
       }
     })
   }) 

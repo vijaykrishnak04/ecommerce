@@ -100,7 +100,7 @@
 <script>
   function blockUser(id,name) {
     var xhr = new XMLHttpRequest();
-    xhr.open("DELETE", "/admin/unblockUser/" + id, true);
+    xhr.open("DELETE", "/admin/blockUser/" + id, true);
     xhr.onreadystatechange = function() {
         document.getElementById(id).innerHTML = "Unblock";
         document.getElementById(name).innerHTML = "Unblock";

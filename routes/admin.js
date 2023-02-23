@@ -7,6 +7,7 @@ const couponController = require('../controllers/couponController')
 const verifylogin     = require('../middlewares/session');
 const upload = require('../config/multer')
 const orderController = require('../controllers/orderController')
+const bannerController = require('../controllers/bannerController')
 
 //get admin pages
 
@@ -46,7 +47,7 @@ adminRouter.put('/restoreProduct/:id',verifylogin.verifyLoginAdmin,productContro
 
 adminRouter.get('/category',verifylogin.verifyLoginAdmin,categoryController.getCategory)
 
-adminRouter.post('/addCategory',verifylogin.verifyLoginAdmin,categoryController.addCategory)
+adminRouter.post('/addCategory',verifylogin.verifyLoginAdmin,upload.single('image'),categoryController.addCategory)
 
 adminRouter.post('/editCategory/:id',verifylogin.verifyLoginAdmin,categoryController.editCategory)
 
@@ -75,6 +76,18 @@ adminRouter.get('/order',verifylogin.verifyLoginAdmin,orderController.getOrders)
 adminRouter.get('/orderedProduct/:id',verifylogin.verifyLoginAdmin,orderController.getOrderedProduct)
 
 adminRouter.post('/orderStatuschange/:id',orderController.orderStatusChanging)
+
+//banner management
+
+adminRouter.get('/getBanner',verifylogin.verifyLoginAdmin,bannerController.getBannerPage)
+
+adminRouter.post('/addBanner',verifylogin.verifyLoginAdmin,bannerController.addBanner)
+
+adminRouter.post('/editBanner/:id',verifylogin.verifyLoginAdmin,bannerController.editBanner)
+
+adminRouter.get('/deleteBanner/:id',verifylogin.verifyLoginAdmin,bannerController.deleteBanner);
+
+adminRouter.get('/restoreBanner/:id',verifylogin.verifyLoginAdmin,bannerController.restoreBanner);
 
 module.exports = adminRouter;
 

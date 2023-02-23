@@ -6,6 +6,8 @@ const otp = require("../model/otpSchema");
 const mailSender = require("../config/mailSender");
 const products = require("../model/productSchema");
 const cart = require("../model/cartSchema");
+const banner = require('../model/bannerSchema')
+const categories = require("../model/categorySchema");
 
 let countInCart = 0;
 
@@ -13,15 +15,17 @@ module.exports = {
   //to render the home page
   getHome: async (req, res) => {
     try {
-  
+
       let session = req.session.user;
       let product = await products.find({ delete: false }).populate("category");
+      let bannerData = await banner.find().sort({ createdAt: -1 }).limit(1);
+      const category = await categories.find();
       if (session) {
         customer = true;
       } else {
         customer = false;
       }
-      res.render("user/home", { customer, product });
+      res.render("user/home", { customer, product, bannerData, category });
     } catch {
       console.error();
       res.render("user/error");
@@ -45,7 +49,7 @@ module.exports = {
           );
           if (passwordMatch) {
             console.log(userData._id);
-            countInCart = cart.findOne({userId: userData._id})
+            countInCart = cart.findOne({ userId: userData._id })
             console.log(countInCart);
             req.session.user = req.body.email;
             res.redirect("/");
@@ -95,7 +99,7 @@ module.exports = {
           phone: phone,
           password: password,
         };
-        mailSender(User).then(async(mailer)=>{
+        mailSender(User).then(async (mailer) => {
           if (mailer) {
             let userData = await otp.findOne({ email: email });
             console.log(userData)
@@ -212,9 +216,14 @@ module.exports = {
   },
 
   editProfile: async (req, res) => {
-    const session = req.session.user;
-    let userData = await users.findOne({ email: session });
-    res.render("user/editProfile", { userData });
+    try {
+      const session = req.session.user;
+      let userData = await users.findOne({ email: session });
+      res.render("user/editProfile", { userData });
+    } catch (error) {
+      console.log(error);
+      res.render("user/error");
+    }
   },
 
   postEditProfile: async (req, res) => {
@@ -249,17 +258,22 @@ module.exports = {
   },
 
   addNewAddress: async (req, res) => {
-    const session = req.session.user
-    const addObj = {
-      housename: req.body.housename,
-      area: req.body.area,
-      landmark: req.body.landmark,
-      district: req.body.district,
-      state: req.body.state,
-      postoffice: req.body.postoffice,
-      pin: req.body.pin
+    try {
+      const session = req.session.user
+      const addObj = {
+        housename: req.body.housename,
+        area: req.body.area,
+        landmark: req.body.landmark,
+        district: req.body.district,
+        state: req.body.state,
+        postoffice: req.body.postoffice,
+        pin: req.body.pin
+      }
+      await users.updateOne({ email: session }, { $push: { addressDetails: addObj } })
+      res.redirect('/checkout')
+    } catch (error) {
+      console.log(error);
+      next(error)
     }
-    await users.updateOne({ email: session }, { $push: { addressDetails: addObj } })
-    res.redirect('/checkout')
   },
 };

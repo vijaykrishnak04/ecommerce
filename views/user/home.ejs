@@ -112,50 +112,19 @@
 			<div class="row justify-content-center">
 				<div class="col-lg-8 col-md-12">
 					<div class="row">
-						<div class="col-lg-8 col-md-8">
+						<% category.forEach((categories)=>{ %>
+						<div class="col-lg-6">
 							<div class="single-deal">
 								<div class="overlay"></div>
-								<img class="img-fluid w-100" src="UI/img/category/c1.jpg" alt="">
-								<a href="UI/img/category/c1.jpg" class="img-pop-up" target="_blank">
+								<img class="img-fluid w-100" style="height: 20rem;" src="/<%=categories.category_Image %>" alt="">
+								<a href="/category/<%=categories._id%>">
 									<div class="deal-details">
-										<h6 class="deal-title">Sneaker for Sports</h6>
+										<h6 class="deal-title"><%=categories.category_name %></h6>
 									</div>
 								</a>
 							</div>
 						</div>
-						<div class="col-lg-4 col-md-4">
-							<div class="single-deal">
-								<div class="overlay"></div>
-								<img class="img-fluid w-100" src="UI/img/category/c2.jpg" alt="">
-								<a href="UI/img/category/c2.jpg" class="img-pop-up" target="_blank">
-									<div class="deal-details">
-										<h6 class="deal-title">Sneaker for Sports</h6>
-									</div>
-								</a>
-							</div>
-						</div>
-						<div class="col-lg-4 col-md-4">
-							<div class="single-deal">
-								<div class="overlay"></div>
-								<img class="img-fluid w-100" src="UI/img/category/c3.jpg" alt="">
-								<a href="UI/img/category/c3.jpg" class="img-pop-up" target="_blank">
-									<div class="deal-details">
-										<h6 class="deal-title">Product for Couple</h6>
-									</div>
-								</a>
-							</div>
-						</div>
-						<div class="col-lg-8 col-md-8">
-							<div class="single-deal">
-								<div class="overlay"></div>
-								<img class="img-fluid w-100" src="UI/img/category/c4.jpg" alt="">
-								<a href="UI/img/category/c4.jpg" class="img-pop-up" target="_blank">
-									<div class="deal-details">
-										<h6 class="deal-title">Sneaker for Sports</h6>
-									</div>
-								</a>
-							</div>
-						</div>
+						<% }) %>
 					</div>
 				</div>
 				<div class="col-lg-4 col-md-6">
@@ -514,7 +483,7 @@
 	<!-- end product Area -->
 
 	<!-- Start exclusive deal Area -->
-	<section class="exclusive-deal-area">
+	<!-- <section class="exclusive-deal-area">
 		<div class="container-fluid">
 			<div class="row justify-content-center align-items-center">
 				<div class="col-lg-6 no-padding exclusive-left">
@@ -548,7 +517,7 @@
 				</div>
 				<div class="col-lg-6 no-padding exclusive-right">
 					<div class="active-exclusive-product-slider">
-						<!-- single exclusive carousel -->
+						
 						<div class="single-exclusive-slider">
 							<img class="img-fluid" src="UI/img/product/e-p1.png" alt="">
 							<div class="product-details">
@@ -564,7 +533,7 @@
 								</div>
 							</div>
 						</div>
-						<!-- single exclusive carousel -->
+						
 						<div class="single-exclusive-slider">
 							<img class="img-fluid" src="UI/img/product/e-p1.png" alt="">
 							<div class="product-details">
@@ -584,7 +553,29 @@
 				</div>
 			</div>
 		</div>
-	</section>
+	</section> -->
+	<div class="site-section block-8">
+		<div class="container" style="background: antiquewhite;">
+		  <% if(bannerData.length){ %> 
+		  <div class="row justify-content-center  mb-5">       
+			<div class="col-md-7 site-section-heading text-center pt-4">            
+			  <h2><%=bannerData[0].offerType%> </h2>
+			</div>
+		  </div>
+		  <div class="row align-items-center">
+			<div class="col-md-12 col-lg-7 mb-5">
+			  <a href="#"><img src="images\pexels-karol-d-325153.jpg" alt="Image placeholder" class="img-fluid rounded"></a>
+			</div>
+			<div class="col-md-12 col-lg-5 text-center pl-md-5">
+			  <h2><a href="#">Use Code <%=bannerData[0].couponName%></a></h2>
+			  <p class="post-meta mb-4">offer <a href="#">valid till</a> <span class="block-8-sep">&bullet;</span> March 3, 2023</p>
+			  <p><%=bannerData[0].bannerText%></p>
+			  <p><a href="/shop" class="btn btn-warning btn-sm">Shop Now</a></p>
+			</div>
+		  </div>
+		  <% } %>
+		</div>
+	  </div>
 	<!-- End exclusive deal Area -->
 
 	<!-- Start brand Area -->

@@ -1,6 +1,7 @@
 var express      = require('express');
 const userController = require('../controllers/userController');
 const productController = require('../controllers/productController')
+const cartController = require('../controllers/cartController')
 const orderController = require('../controllers/orderController')
 const router = express() 
 const verifyLogin= require("../middlewares/session");
@@ -52,13 +53,13 @@ router.get('/productView/:id',productController.getProductViewPage);
 
 //cart manage
 
-router.get('/viewcart',verifyLogin.verifyLoginUser,productController.viewCart);
+router.get('/viewcart',verifyLogin.verifyLoginUser,cartController.viewCart);
 
-router.get('/cart/:id',verifyLogin.verifyLoginUser,productController.addToCart)
+router.get('/cart/:id',verifyLogin.verifyLoginUser,cartController.addToCart)
 
-router.post('/removeProduct', productController.removeProduct);
+router.post('/removeProduct', cartController.removeProduct);
 
-router.post('/changeQuantity',productController.changeQuantity);
+router.post('/changeQuantity',cartController.changeQuantity);
 
 //checkout page and order management
 

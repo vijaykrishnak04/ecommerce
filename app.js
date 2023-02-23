@@ -64,9 +64,18 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 500 || 404);
-  res.render("user/error");
+  // set the error status code
+  const statusCode = err.status || 500;
+
+  // render the appropriate error page based on the status code
+  if (statusCode === 404) {
+    res.status(statusCode).render("user/error");
+  } else if (statusCode >= 500) {
+    res.status(statusCode).render("user/error");
+  } else {
+    res.status(statusCode).render("user/error");
+  }
 });
+
 
 module.exports = app;

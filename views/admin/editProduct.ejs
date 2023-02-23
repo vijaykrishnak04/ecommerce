@@ -36,16 +36,26 @@
           </div>
         </div>
         <div class="d-flex justify-content-center mt-1">
-          <button type="submit" class="btn btn-success btn-block mb-4">Edit product</button>
+          <button type="submit" class="btn btn-success btn-block ">Edit product</button>
         </div>
       </form>
-      <form action="/admin/postEditproduct/<%= productData._id %>" method="post" enctype="multipart/form-data">
-        <div class="form-outline mb-1 row ">
-          <label for="formFile" class="form-label">Edit Product image</label>
-           <input class="form-control" placeholder="Product image " type="file" name="image"
-              id="product_image" multiple>
+      <form action="/admin/postEditproduct/<%= productData._id %>" id="form" method="post" enctype="multipart/form-data">
+        <div class="form-outline flex-fill mb-0 mt-4">
+          <input
+            class="form-control"
+            required
+            placeholder="Product image"
+            id="fileInput"
+            type="file"
+            name="image"
+            id="product_image"
+            multiple
+          />
+          <div id="previews"></div>
         </div>
-        <button type="submit" class="btn btn-success btn-block mb-4">Edit </button>
+        <div class="d-flex justify-content-center mt-1">
+          <button type="submit" class="btn btn-success btn-block mb-4">Edit product Image</button>
+        </div>
       </form>
     </div>
   </div>
@@ -53,5 +63,29 @@
     integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
     crossorigin="anonymous"></script>
   </body>
-
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const previews = document.getElementById("previews");
+  
+    fileInput.addEventListener("change", function () {
+      previews.innerHTML = "";
+  
+      const files = fileInput.files;
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+  
+        const reader = new FileReader();
+        reader.addEventListener("load", function () {
+          const img = document.createElement("img");
+          img.src = reader.result;
+          img.style.width = "150px";
+          img.style.marginRight = "7.5px";
+  
+          previews.appendChild(img);
+        });
+  
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
   </html>

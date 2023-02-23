@@ -124,4 +124,66 @@
       reader.readAsDataURL(file);
     }
   });
+
+  const form = document.querySelector('#form');
+  const productName = document.querySelector('#product_name');
+  const price = document.querySelector('#price');
+  const description = document.querySelector('#description');
+  const stock = document.querySelector('#stock');
+  const category = document.querySelector('#category');
+
+  form.addEventListener('submit', function(event) {
+    // Prevent the form from submitting if validation fails
+    if (!validateProductName() || !validatePrice() || !validateDescription() || !validateStock() || !validateCategory()) {
+      event.preventDefault();
+    }
+  });
+
+  function validateProductName() {
+    if (productName.value.trim() === '') {
+      alert('Please enter a product name');
+      productName.focus();
+      return false;
+    }
+    return true;
+  }
+
+  function validatePrice() {
+    const priceRegex = /^\d+(\.\d{1,2})?$/;
+    if (!priceRegex.test(price.value)) {
+      alert('Please enter a valid price (e.g. 10 or 10.99)');
+      price.focus();
+      return false;
+    }
+    return true;
+  }
+
+  function validateDescription() {
+    if (description.value.trim() === '') {
+      alert('Please enter a product description');
+      description.focus();
+      return false;
+    }
+    return true;
+  }
+
+  function validateStock() {
+    const stockRegex = /^[1-9]\d*$/;
+    if (!stockRegex.test(stock.value)) {
+      alert('Please enter a valid stock quantity (e.g. 10)');
+      stock.focus();
+      return false;
+    }
+    return true;
+  }
+
+  function validateCategory() {
+    if (category.value === '') {
+      alert('Please select a product category');
+      category.focus();
+      return false;
+    }
+    return true;
+  }
 </script>
+

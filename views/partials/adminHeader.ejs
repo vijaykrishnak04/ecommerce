@@ -12,6 +12,10 @@
   <!--===============================================================================================-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   <!--===============================================================================================-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap5.min.css">
+  <!--===============================================================================================-->
   <title>Admin panel</title>
 </head>
 
@@ -43,6 +47,9 @@
         <i class="fa fa-gift"></i><a href="/admin/coupon">Coupons</a>
       </li>
       <li>
+        <i class="fa fa-podcast"></i><a href="/admin/getBanner">Banners</a>
+      </li>
+      <li>
         <i class="fa fa-sign-out"></i><a href="/admin/adminLogout">Logout</a>
       </li>
     </div>
@@ -50,7 +57,7 @@
   <section class="sectionTop" id="interface" style="z-index: 999">
     <div class="navigation">
       <div>
-        <input class="searchbar" type="text" placeholder="search">
+        
       </div>
       <div class="profile">
         <i class="fa fa-bell"></i>

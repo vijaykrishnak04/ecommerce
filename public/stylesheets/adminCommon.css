@@ -1,172 +1,175 @@
 body {
-    width: 100%;
-    position: relative;
-    display: flex;
-    background-color: #F3F3F3;
-  }
-  
-  #menu {
-   
-    width: 300px;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-  }
-  
-  #menu .logo {
-    display: flex;
-    align-items: center;
-    color: #43230E;
-    padding: 30px 0 0 30px;
-  }
-  
-  #menu .items {
-    margin-top: 40px;
-    font-weight: 700;
-  }
-  
-  #menu .items li {
-    list-style: none;
-    padding: 15px 0;
-  }
-  
-  #menu .items li:hover {
-    background: #ffffff;
-    cursor: pointer;
-  }
-  
-  #menu .items li i {
-    color: #FFC029;
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    font-size: 20px;
-    margin: 0 10px 0 25px;
-  }
-  
-  #menu .items li a {
-    text-decoration: none;
-    color: #43230E;
-    font-weight: 300px;
-  }
-  
-  #interface {
-    margin-left: 300px;
-    position: relative;
-  }
-  
-  #interface .navigation {
-    background-color: #F3F3F3;
-    display: flex;
-    justify-content: space-around;
-    padding:26px 30px;
-    border-bottom: 1px solid #000000;
-    position: fixed;
-    width: calc(100% - 300px);
-  }
+  width: 100%;
+  position: relative;
+  display: flex;
+  background-color: #f3f3f3;
+}
 
-  .searchbar{
-    width: 28rem;
+input.invalid {
+  border-color: red;
+}
+
+#menu {
+  width: 300px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+#menu .logo {
+  display: flex;
+  align-items: center;
+  color: #43230e;
+  padding: 30px 0 0 30px;
+}
+
+#menu .items {
+  margin-top: 40px;
+  font-weight: 700;
+}
+
+#menu .items li {
+  list-style: none;
+  padding: 15px 0;
+}
+
+#menu .items li:hover {
+  background: #ffffff;
+  cursor: pointer;
+}
+
+#menu .items li i {
+  color: #ffc029;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 20px;
+  margin: 0 10px 0 25px;
+}
+
+#menu .items li a {
+  text-decoration: none;
+  color: #43230e;
+  font-weight: 300px;
+}
+
+#interface {
+  margin-left: 300px;
+  position: relative;
+}
+
+#interface .navigation {
+  background-color: #f3f3f3;
+  display: flex;
+  justify-content: space-around;
+  padding: 26px 30px;
+  border-bottom: 1px solid #000000;
+  position: fixed;
+  width: calc(100% - 300px);
+}
+
+.searchbar {
+  width: 28rem;
+}
+
+.i-name {
+  color: rgb(156, 147, 147);
+  padding: 30px 30px 0 30px;
+  font-size: 24px;
+  font-weight: 700px;
+  margin-top: 70px;
+}
+
+.values {
+  padding: 30px 30px 0 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.values .val-box {
+  background-color: #d9d9d9;
+  width: 235px;
+  padding: 16px 20px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.values .val-box i {
+  font-size: 25px;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  border-radius: 50%;
+  text-align: center;
+  background-color: #003049;
+  color: #fff;
+  margin-right: 15px;
+}
+
+.values .val-box h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.values .val-box span {
+  font-size: 15px;
+  color: rgb(22, 19, 19);
+}
+
+@media (max-width: 769px) {
+  #menu {
+    width: 270px;
+    position: fixed;
+    left: -270px;
+    transition: 0.3s ease;
   }
-  
-  .i-name {
-    color: rgb(156, 147, 147);
-    padding: 30px 30px 0 30px;
-    font-size: 24px;
-    font-weight: 700px;
-    margin-top: 70px;
+  #menu.active {
+    left: 0px;
   }
-  
+  #menu-btn {
+    display: initial;
+  }
+  #interface {
+    margin-left: 0px;
+    display: inline-block;
+    transition: 0.3s ease;
+  }
+  #menu.active ~ #interface {
+    width: calc(100%- 270px);
+    margin-left: 270px;
+    transition: 0.3s ease;
+  }
+  #interface .navigation {
+    width: 100%;
+  }
   .values {
     padding: 30px 30px 0 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  
-  .values .val-box {
-    background-color: #d9d9d9;
-    width: 235px;
-    padding: 16px 20px;
-    border-radius: 5px;
-    display: flex;
     justify-content: flex-start;
-    align-items: center;
   }
-  
-  .values .val-box i {
-    font-size: 25px;
-    width: 60px;
-    height: 60px;
-    line-height: 60px;
-    border-radius: 50%;
-    text-align: center;
-    background-color: #003049;
-    color: #fff;
-    margin-right: 15px;
+  .values .val-box {
+    padding: 16px 20px;
+    margin: 10px 20px 10px 0;
   }
-  
-  .values .val-box h3 {
-    font-size: 18px;
-    font-weight: 600;
+}
+
+@media (max-width: 47px) {
+  #interface .navigation {
+    padding: 15px;
   }
-  
-  .values .val-box span {
-    font-size: 15px;
-    color: rgb(22, 19, 19);
+  .i-name {
+    padding: 30px 15px 0 15px;
   }
-  
-  @media (max-width: 769px) {
-    #menu {
-      width: 270px;
-      position: fixed;
-      left: -270px;
-      transition: 0.3s ease;
-    }
-    #menu.active {
-      left: 0px;
-    }
-    #menu-btn {
-      display: initial;
-    }
-    #interface {
-      margin-left: 0px;
-      display: inline-block;
-      transition: 0.3s ease;
-    }
-    #menu.active ~ #interface {
-      width: calc(100%- 270px);
-      margin-left: 270px;
-      transition: 0.3s ease;
-    }
-    #interface .navigation {
-      width: 100%;
-    }
-    .values {
-      padding: 30px 30px 0 30px;
-      justify-content: flex-start;
-    }
-    .values .val-box {
-      padding: 16px 20px;
-      margin: 10px 20px 10px 0;
-    }
+  .values {
+    padding: 15px 15px 0 15px;
   }
-  
-  @media (max-width: 47px) {
-    #interface .navigation {
-      padding: 15px;
-    }
-    .i-name {
-      padding: 30px 15px 0 15px;
-    }
-    .values {
-      padding: 15px 15px 0 15px;
-    }
-    .values .val-box {
-      width: 100%;
-      margin: 8px 0;
-    }
+  .values .val-box {
+    width: 100%;
+    margin: 8px 0;
   }
+}

@@ -1,224 +1,204 @@
 <%- include ("../layout/layout2") %>
 
-<body>
-  <!-- Start Header Area -->
-  <%- include ("../partials/userHeader") %>
-  <!-- End Header Area -->
+  <body>
+    <!-- Start Header Area -->
+    <%- include ("../partials/userHeader") %>
+      <!-- End Header Area -->
 
-  <!-- Start Banner Area -->
-  <section class="banner-area organic-breadcrumb">
-    <div class="container">
-      <div
-        class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end"
-      >
-        <div class="col-first">
-          <h1>Shopping Cart</h1>
-          <nav class="d-flex align-items-center">
-            <a href="/">Home<span class="lnr lnr-arrow-right"></span></a>
-            <a href="#">Cart</a>
-          </nav>
+      <!-- Start Banner Area -->
+      <section class="banner-area organic-breadcrumb">
+        <div class="container">
+          <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+              <h1>Shopping Cart</h1>
+              <nav class="d-flex align-items-center">
+                <a href="/">Home<span class="lnr lnr-arrow-right"></span></a>
+                <a href="#">Cart</a>
+              </nav>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
-  <!-- End Banner Area -->
+      </section>
+      <!-- End Banner Area -->
 
-  <!--================Cart Area =================-->
-  <section class="cart_area">
-    <div class="site-section">
-      <div class="container">
-        <% if (locals.countInCart!==0) { %>
-        <div class="row mb-5">
-          <div class="site-blocks-table table-responsive-md" style="border: solid;" >
-            <table class="table">
-              <thead style="
+      <!--================Cart Area =================-->
+      <section class="cart_area">
+        <div class="site-section">
+          <div class="container">
+            <% if (locals.countInCart!==0) { %>
+              <div class="row mb-5">
+                <div class="site-blocks-table table-responsive-md" style="border: solid;">
+                  <table class="table">
+                    <thead style="
               color: black;
               background: #f6c344;
           ">
-                <tr>
-                  <th class="product-thumbnail">Image</th>
-                  <th class="product-name">Product</th>
-                  <th class="product-price">Price</th>
-                  <th class="product-quantity">Quantity</th>
-                  <th class="product-total">Total</th>
-                  <th class="product-remove">Remove</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% productData.forEach((product)=>{%>
-                <tr>
-                  <td class="product-thumbnail">
-                    <a href="/shop"
-                      ><img
-                        style="width: 100px"
-                        src="<%= product.productDetail.image[0] %>"
-                        alt="Image"
-                        class="img-fluid"
-                    /></a>
-                  </td>
-                  <td class="product-name">
-                    <h2 class="h5 text-black">
-                      <%= product.productDetail.name %>
-                    </h2>
-                  </td>
-                  <td><%= product.productDetail.price%> ₹</td>
-                  <td class="product-quantity">
-                    <div class="input-group" style="max-width: 120px">
-                      <button
-                        class="btn btn-outline-warning js-btn-minus"
-                        onclick="changeQuantity('<%= product._id %>','<%= product.productDetail._id %>',-1)"
-                        type="button"
-                      >
-                        &minus;
-                      </button>
+                      <tr>
+                        <th class="product-thumbnail">Image</th>
+                        <th class="product-name">Product</th>
+                        <th class="product-price">Price</th>
+                        <th class="product-quantity">Quantity</th>
+                        <th class="product-total">Total</th>
+                        <th class="product-remove">Remove</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% productData.forEach((product)=>{%>
+                        <tr>
+                          <td class="product-thumbnail">
+                            <a href="/shop"><img style="width: 100px" src="<%= product.productDetail.image[0] %>"
+                                alt="Image" class="img-fluid" /></a>
+                          </td>
+                          <td class="product-name">
+                            <h2 class="h5 text-black">
+                              <%= product.productDetail.name %>
+                            </h2>
+                          </td>
+                          <td>
+                            <%= product.productDetail.price%> ₹
+                          </td>
+                          <td class="product-quantity">
+                            <div class="input-group" style="max-width: 120px">
+                              <button class="btn btn-outline-warning js-btn-minus"
+                                onclick="changeQuantity('<%= product._id %>','<%= product.productDetail._id %>',-1)"
+                                type="button">
+                                &minus;
+                              </button>
 
-                      <input
-                        id="<%= product.productDetail._id %>"
-                        type="text"
-                        class="form-control text-center"
-                        min="0"
-                        name="quantity"
-                        value="<%= product.productQuantity%>"
-                        placeholder=""
-                        aria-label="Example text with button addon"
-                        aria-describedby="button-addon1"
-                      />
+                              <input id="<%= product.productDetail._id %>" type="text" class="form-control text-center"
+                                min="0" name="quantity" value="<%= product.productQuantity%>" placeholder=""
+                                aria-label="Example text with button addon" aria-describedby="button-addon1" />
 
-                      <button
-                        class="btn btn-outline-warning js-btn-plus"
-                        onclick="changeQuantity('<%= product._id %>','<%= product.productDetail._id %>',1)"
-                        type="button"
-                      >
-                        &plus;
-                      </button>
-                    </div>
-                    <% var a=product.productDetail.price%> <% var
-                    b=product.productQuantity%> <% var c=a*b %>
-                  </td>
+                              <button class="btn btn-outline-warning js-btn-plus"
+                                onclick="changeQuantity('<%= product._id %>','<%= product.productDetail._id %>',1)"
+                                type="button">
+                                &plus;
+                              </button>
+                            </div>
+                            <% var a=product.productDetail.price%>
+                              <% var b=product.productQuantity%>
+                                <% var c=a*b %>
+                          </td>
 
-                  <td><%=c %> ₹</td>
-                  <!-- <td><%= product.productDetail.price%> ₹</td> -->
-                  <!-- <td><a href="#" class="btn btn-primary btn-sm">X</a></td> -->
-                  <td class="product-remove">
-                    <button
-                      class="btn btn-danger"
-                      onclick="removeProduct('<%= product._id %>','<%= product.productDetail._id %>')"
-                    >
-                      Remove
-                    </button>
-                  </td>
-                </tr>
+                          <td>
+                            <%=c %> ₹
+                          </td>
+                          <!-- <td><%= product.productDetail.price%> ₹</td> -->
+                          <!-- <td><a href="#" class="btn btn-primary btn-sm">X</a></td> -->
+                          <td class="product-remove">
+                            <button class="btn btn-danger"
+                              onclick="removeProduct('<%= product._id %>','<%= product.productDetail._id %>')">
+                              Remove
+                            </button>
+                          </td>
+                        </tr>
 
-                <% }) %>
-              </tbody>
-            </table>
-          </div>
-          <% if (locals.countInCart!==0) { %>
-          <div class="col">
-            <div class="row">
-              <div class="col ml-md-5" style="
+                        <% }) %>
+                    </tbody>
+                  </table>
+                </div>
+                <% if (locals.countInCart!==0) { %>
+                  <div class="col" style="
+          width: 1rem;
+      ">
+                    <div class="row">
+                      <div class="col ml-md-3" style="
               border: solid;
               padding: 2rem;
           ">
-                <div class="row">
-                  <div class="col-md-12 text-right border-bottom mb-5">
-                    <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <span class="text-black">Subtotal</span>
-                  </div>
-                  <div class="col-md-6 text-right">
-                    <% if(locals.sum!==0){%>
-                    <strong class="text-black"><%=sum%> ₹</strong>
-                    <% } else { %>
-                    <strong class="text-black">0 ₹</strong>
-                    <%}%>
-                  </div>
-                </div>
-                <div class="row mb-5">
-                  <div class="col-md-6">
-                    <span class="text-black">Shipping Charge</span>
-                  </div>
-                  <div class="col-md-6 text-right">
-                    <% if(locals.sum<1000) {%>
-                    <strong class="text-black">40 ₹</strong>
-                    <small class="text-danger"
-                      >shop for 1000 or more to get free delivery</small
-                    >
-                    <% } else { %>
-                    <strong class="text-black">0₹(free delivery)</strong>
-                    <%}%>
-                  </div>
-                </div>
-                <div class="row mb-5">
-                  <div class="col-md-6">
-                    <span class="text-black">Total</span>
-                  </div>
-                  <div class="col-md-6 text-right">
-                    <% if(locals.sum<1000) {%>
+                        <div class="row">
+                          <div class="col-md-12 text-right border-bottom mb-3">
+                            <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <div class="col-md-6">
+                            <span class="text-black">Subtotal</span>
+                          </div>
+                          <div class="col-md-6 text-right">
+                            <% if(locals.sum!==0){%>
+                              <strong class="text-black">
+                                <%=sum%> ₹
+                              </strong>
+                              <% } else { %>
+                                <strong class="text-black">0 ₹</strong>
+                                <%}%>
+                          </div>
+                        </div>
+                        <div class="row mb-5">
+                          <div class="col-md-6">
+                            <span class="text-black">Shipping Charge</span>
+                          </div>
+                          <div class="col-md-6 text-right">
+                            <% if(locals.sum<1000) {%>
+                              <strong class="text-black">40 ₹</strong>
+                              <small class="text-danger">shop for 1000 or more to get free delivery</small>
+                              <% } else { %>
+                                <strong class="text-black">0₹(free delivery)</strong>
+                                <%}%>
+                          </div>
+                        </div>
+                        <div class="row mb-5">
+                          <div class="col-md-6">
+                            <span class="text-black">Total</span>
+                          </div>
+                          <div class="col-md-6 text-right">
+                            <% if(locals.sum<1000) {%>
 
-                    <strong class="text-black"><%=sum+40%> ₹</strong>
-                    <% } else { %>
-                    <strong class="text-black"><%=sum%> ₹</strong>
-                    <%}%>
-                  </div>
-                </div>
+                              <strong class="text-black">
+                                <%=sum+40%> ₹
+                              </strong>
+                              <% } else { %>
+                                <strong class="text-black">
+                                  <%=sum%> ₹
+                                </strong>
+                                <%}%>
+                          </div>
+                        </div>
 
-                <div class="row">
-                  <div class="col-md-12">
-                    <button
-                      class="btn btn-warning btn-lg py-3 btn-block"
-                      onclick="window.location='/checkout'"
-                    >
-                      Proceed To Checkout
-                    </button>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <button class="btn btn-warning btn-lg py-3 btn-block" onclick="window.location='/checkout'">
+                              Proceed To Checkout
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                  <% } %>
               </div>
-            </div>
-          </div>
-          <% } %>
-        </div>
-        <% } else { %>
+              <% } else { %>
 
-        <div class="p-3 m-3">
-          <img
-            src="/images/emptyCart.png"
-            style="width: 40%; height: 40%"
-            class="img-fluid rounded mx-auto d-block mb-5"
-            alt="image"
-          />
-          <h2 class="text-center text-primary">Oops!</h2>
-          <h3 class="text-center text-primary">Your Cart is empty</h3>
-        </div>
-        <% } %>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="row mb-5">
-              <div class="col-md-6 mb-3 mb-md-0">
-                <button class="btn btn-warning btn-sm btn-block">
-                  Update Cart
-                </button>
-              </div>
-              <div class="col-md-6">
-                <a href="/shop"
-                  ><button class="btn btn-outline-warning btn-sm btn-block">
-                    Continue Shopping
-                  </button></a
-                >
-              </div>
-            </div>
+                <div class="p-3 m-3">
+                  <img src="/images/emptyCart.png" style="width: 40%; height: 40%"
+                    class="img-fluid rounded mx-auto d-block mb-5" alt="image" />
+                  <h2 class="text-center text-primary">Oops!</h2>
+                  <h3 class="text-center text-primary">Your Cart is empty</h3>
+                </div>
+                <% } %>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="row mb-5">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                          <button class="btn btn-warning btn-sm btn-block">
+                            Update Cart
+                          </button>
+                        </div>
+                        <div class="col-md-6">
+                          <a href="/shop"><button class="btn btn-outline-warning btn-sm btn-block">
+                              Continue Shopping
+                            </button></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-  <!--================End Cart Area =================-->
+      </section>
+      <!--================End Cart Area =================-->
 
-  <!-- start footer Area -->
-  <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.js"></script> -->
-  <%- include ("../partials/userFooter") %>
-</body>
-
+      <!-- start footer Area -->
+      <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.js"></script> -->
+      <%- include ("../partials/userFooter") %>
+  </body>

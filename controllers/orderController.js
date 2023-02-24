@@ -6,6 +6,7 @@ const coupon = require("../model/couponSchema");
 const moment = require("moment");
 const mongoose = require("mongoose");
 const promise = require("promise");
+const instance = require("../config/razorpay");
 
 let countInCart;
 let countInWishlist;
@@ -183,7 +184,10 @@ module.exports = {
               deliveryDate: moment().add(3, "days").format("MMM Do YY"),
             });
 
+            await cart.deleteOne({ userId: userData._id });
+
             if (req.body.paymentMethod === "COD") {
+              
               const orderDatas = await orderData.save();
               const orderId = orderDatas._id;
 
@@ -191,7 +195,7 @@ module.exports = {
                 { _id: orderId },
                 { $set: { orderStatus: "placed" } }
               );
-              await cart.deleteOne({ userId: userData._id });
+
               res.redirect("/orderSuccess");
               await coupon.updateOne(
                 { couponName: data.coupon },
@@ -201,26 +205,32 @@ module.exports = {
               const orderDatas = await orderData.save();
               const orderId = orderDatas._id;
 
-              const session = await stripe.checkout.sessions.create({
-                payment_method_types: ["card"],
-                line_items: productData.map((ele) => {
-                  return {
-                    price_data: {
-                      currency: "inr",
-                      product_data: {
-                        name: ele.productDetail.name,
-                      },
-                      unit_amount: ele.productDetail.price * 100,
-                    },
-                    quantity: ele.productQuantity,
-                  };
-                }),
-                mode: "payment",
-                success_url: `${process.env.SERVER_URL}/orderSuccess?cartId=${userData._id}&orderId=${orderId}`,
-                cancel_url: `${process.env.SERVER_URL}/checkout?orderId=${orderId}`,
+              let options = {
+                amount: total,
+                currency: "INR",
+                receipt: "" + orderId,
+              };
+              instance.orders.create(options, async function (err, Order) {
+                await order.updateOne(
+                  { _id: orderId },
+                  { $set: { orderStatus: "placed" } }
+                );
+                if (err) {
+                  console.log(err);
+                } else {
+                  res.json({ order: Order });
+
+                  coupon
+                    .updateOne(
+                      { couponName: data.coupon },
+                      { $push: { users: { userId: objId } } }
+                    )
+                    .then((updated) => {
+                      console.log(updated);
+                      res.redirect("/orderSuccess");
+                    });
+                }
               });
-              console.log(session);
-              res.json({ url: session.url });
             }
           } else {
             res.redirect("/viewCart");
@@ -230,6 +240,40 @@ module.exports = {
     } catch (error) {
       console.log(error);
       res.render("user/error");
+    }
+  },
+
+  verifyPayment: async (req, res, next) => {
+    try {
+      const details = req.body;
+      let hmac = crypto.createHmac("SHA256", process.env.KETSECRET);
+      hmac.update(
+        details.payment.razorpay_order_id +
+        "|" +
+        details.payment.razorpay_payment_id
+      );
+      hmac = hmac.digest("hex");
+
+      if (hmac == details.payment.razorpay_signature) {
+        const objId = mongoose.Types.ObjectId(details.order.receipt);
+        order
+          .updateOne(
+            { _id: objId },
+            { $set: { paymentStatus: "paid", orderStatus: "placed" } }
+          )
+          .then(() => {
+            res.json({ success: true });
+          })
+          .catch((err) => {
+            console.log(err);
+            res.json({ status: false, err_message: "payment failed" });
+          });
+      } else {
+        console.log(err);
+        res.json({ status: false, err_message: "payment failed" });
+      }
+    } catch (err) {
+      next(err);
     }
   },
 
@@ -606,9 +650,9 @@ module.exports = {
           $set: {
             orderStatus: data.orderStatus,
             paymentStatus: data.paymentStatus,
-          }
+          },
         }
-      )
+      );
       res.redirect("/admin/order");
     } catch (error) {
       console.log(error);

@@ -30,6 +30,7 @@
     "path": "^0.12.7",
     "paypal-rest-sdk": "^1.8.1",
     "promise": "^8.3.0",
+    "razorpay": "^2.8.6",
     "stripe": "^11.5.0",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.4.8",

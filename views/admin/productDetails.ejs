@@ -6,7 +6,7 @@
         <h1 class="">Product details</h1>
       </div>
       <div class="container mt-2 table-responsive">
-        <table class="table mt-2" id="table">
+        <table class="table mt-2" id="example" class="table table-striped">
           <thead>
             <tr>
               <th scope="col">No</th>
@@ -38,21 +38,21 @@
                   <td>
                     <%=products.stock%>
                   </td>
-                  
+
                   <td>
                     <a href="/productView/<%=products._id%>" class="btn btn-outline-success">View</a>
                     <a href="/admin/editProduct/<%=products._id%>" class="btn btn-outline-warning">Edit</a>
                     <% if(products.delete===false) { %>
+                      <button type="button" class="btn btn-warning mt-1" id="<%=products._id%>" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal-<%=products._id%>">
+                        Delete
+                      </button>
+                      <% }else{ %>
                         <button type="button" class="btn btn-warning mt-1" id="<%=products._id%>" data-bs-toggle="modal"
                           data-bs-target="#exampleModal-<%=products._id%>">
-                          Delete
+                          Restore
                         </button>
-                        <% }else{ %>
-                          <button type="button" class="btn btn-warning mt-1" id="<%=products._id%>" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal-<%=products._id%>">
-                            Restore
-                          </button>
-                          <%}%>
+                        <%}%>
                           <!-- Modal -->
                           <div class="modal fade" id="exampleModal-<%=products._id%>" tabindex="-1"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -63,18 +63,19 @@
                                   <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                                 </div>
-                                  <div class="modal-body">
-                                    Are you sure ?
-                                  </div>
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                          data-bs-dismiss="modal">Close</button>
-                                          <% if(products.delete===false) {%>
-                                          <button class="btn btn-success" id="<%=products.name%>" onclick="deleteData('<%=products._id%>','<%=products.name%>')">Delete</button>
-                                          <% }else{ %>
-                                            <button class="btn btn-success" id="<%=products.name%>" onclick="deleteData('<%=products._id%>','<%=products.name%>')">Restore</button>
-                                            <%}%>
-                                      </div>
+                                <div class="modal-body">
+                                  Are you sure ?
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                  <% if(products.delete===false) {%>
+                                    <button class="btn btn-success" id="<%=products.name%>"
+                                      onclick="deleteData('<%=products._id%>','<%=products.name%>')">Delete</button>
+                                    <% }else{ %>
+                                      <button class="btn btn-success" id="<%=products.name%>"
+                                        onclick="deleteData('<%=products._id%>','<%=products.name%>')">Restore</button>
+                                      <%}%>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -96,30 +97,37 @@
   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
   <script>
-    function deleteData(id,name) {
+
+    $(document).ready(function () {
+      $('#example').DataTable();
+    });
+
+    function deleteData(id, name) {
       var xhr = new XMLHttpRequest();
       xhr.open("DELETE", "/admin/deleteProduct/" + id, true);
-      xhr.onreadystatechange = function() {
-          document.getElementById(id).innerHTML = "Restore";
-          document.getElementById(name).innerHTML = "Restore";
-          document.getElementById(name).onclick = function() {
-            restoreData(id,name);
-          };
+      xhr.onreadystatechange = function () {
+        document.getElementById(id).innerHTML = "Restore";
+        document.getElementById(name).innerHTML = "Restore";
+        document.getElementById(name).onclick = function () {
+          restoreData(id, name);
+        };
       };
       xhr.send();
     }
 
-    function restoreData(id,name) {
+    function restoreData(id, name) {
       var xhr = new XMLHttpRequest();
       xhr.open("PUT", "/admin/restoreProduct/" + id, true);
-      xhr.onreadystatechange = function() {
-          document.getElementById(id).innerHTML = "Delete";
-          document.getElementById(name).innerHTML = "Delete";
-          document.getElementById(name).onclick = function() {
-            deleteData(id,name);
-          };
+      xhr.onreadystatechange = function () {
+        document.getElementById(id).innerHTML = "Delete";
+        document.getElementById(name).innerHTML = "Delete";
+        document.getElementById(name).onclick = function () {
+          deleteData(id, name);
+        };
       };
       xhr.send();
     }

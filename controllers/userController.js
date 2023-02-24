@@ -145,6 +145,7 @@ module.exports = {
   forgotPassword: (req, res) => {
     res.render("user/forgotPassword");
   },
+
   postForgotPassword: async (req, res) => {
     try {
       const userEmail = req.body.email;
@@ -183,6 +184,7 @@ module.exports = {
       res.render("user/error");
     }
   },
+
   postChangePassword: async (req, res) => {
     try {
       const newPassword = req.body.newPassword;
@@ -199,6 +201,42 @@ module.exports = {
     } catch (error) {
       console.log(error);
       res.render("user/error");
+    }
+  },
+
+  getResetpassword: (req,res)=>{
+    res.render('user/editPassword')
+  },
+
+  postResetPassword: async (req, res) => {
+    try {
+      Email = req.session.user
+      let password = req.body.password
+      let userData = await users.findOne()
+      const passwordMatch = await bcrypt.compare(
+        password,
+        userData.password
+      );
+      if (passwordMatch) {
+        const newPassword = req.body.newPassword;
+        const sNewPassword = await bcrypt.hash(newPassword, 10);
+        const filter = { email: Email };
+        const update = { password: sNewPassword };
+        await users
+          .findOneAndUpdate(filter, update, {
+            new: true,
+          })
+          .then(() => {
+            res.redirect("/viewProfile");
+          });
+      }else{
+        console.log("password not match")
+        res.render('user/editPassword',{ error: "invalid Password" })
+      }
+
+    } catch (error) {
+      console.log(error)
+      res.render("user/error")
     }
   },
 

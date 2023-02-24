@@ -40,7 +40,12 @@ router.get('/viewProfile',verifyLogin.verifyLoginUser,userController.viewProfile
 
 router.get('/editProfile',verifyLogin.verifyLoginUser,userController.editProfile);
 
-router.post('/postEditProfile',userController.postEditProfile) 
+router.post('/postEditProfile',userController.postEditProfile);
+
+router.get('/editPassword',verifyLogin.verifyLoginUser,userController.getResetpassword)
+
+router.post('/postEditPassword',verifyLogin.verifyLoginUser,userController.postResetPassword)
+
 
 
 //product view

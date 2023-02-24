@@ -183,11 +183,11 @@ module.exports = {
               orderDate: moment().format("MMM Do YY"),
               deliveryDate: moment().add(3, "days").format("MMM Do YY"),
             });
-
+            console.log(total)
             await cart.deleteOne({ userId: userData._id });
 
             if (req.body.paymentMethod === "COD") {
-              
+
               const orderDatas = await orderData.save();
               const orderId = orderDatas._id;
 

@@ -23,167 +23,114 @@
 
     <!--================Checkout Area =================-->
     <section class="checkout_area section_gap">
-        <div class="col-md-12">
-            <h2 class="h3 mb-3 text-black"> Address</h2>
-            <div class="p-3 p-lg-5 border h-100">
+      <div class="row justify-content-center">
+				<div class="col-xl-10 ftco-animate">
 
-              <label class="col-xs-3 control-label">Your Address</label>
+					<!--  -->
 
-              <select class="form-select mt-2" required name="address">
-                <% userData.addressDetails.forEach((address)=>{%>
-                  <option name="address">
-                    <%= address.housename %>,<%= address.postoffice%>,<%= address.landmark %>,<%=address.area %>,<%=
-                              address.district %>,<%= address.pin %>,<%=address.state %>
-                  </option>
-                  <% }) %>
-              </select>
-              <button type="button" class="btn btn-secondary mt-3" data-bs-toggle="modal"
-                data-bs-target="#exampleModal" data-bs-whatever="@mdo">
-                Add new address
-              </button>
-            </div>
+					<div class="container pb-5">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+							data-bs-target="#exampleModal">
+							Add new address
+						</button>
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+							data-bs-target="#editAddress">
+							Edit Address
+						</button>
+					</div>
 
-            <div class="row mb-5">
-              <div class="col-md-12">
-                <h2 class="h3 mb-3 text-black">Your Order</h2>
-                <div class="p-3 p-lg-5 border">
-                  <h2>Payment</h2>
-                  <form id="placeOrder">
-                    <label class="col-xs-3 control-label">Select Shipping Address</label>
+					<h5>
+						Select Shipping address
+					</h5>
+					<form id="placeOrder">
+						<select class="form-select mt-2" required name="address" style="width: 20rem">
+							<% userData.addressDetails.forEach((address)=>{%>
+								<option name="address">
+									<%= address.housename %>,<%= address.postoffice%>,<%= address.landmark %>,
+												<%=address.area %>,<%= address.district %>,<%= address.pin %>,
+															<%=address.state %>
+								</option>
+								<% }) %>
+						</select>
 
-                    <select class="form-select mt-2" required name="address">
-                      <% userData.addressDetails.forEach((address)=>{%>
-                        <option name="address">
-                          <%= address.housename %>,<%= address.postoffice%>,<%= address.landmark %>,<%=address.area
-                                  %>,<%= address.district %>,<%= address.pin %>,<%=address.state %>
-                        </option>
-                        <% }) %>
-                    </select>
+						<!-- Button trigger modal -->
 
-                    <div class="d-block my-3">
-                      <div class="custom-control custom-radio">
-                        <input id="credit" name="paymentMethod" type="radio" value="COD"
-                          class="custom-control-input" checked required />
-                        <label class="custom-control-label" for="credit">COD</label>
-                      </div>
-                      <div class="custom-control custom-radio">
-                        <input id="debit" name="paymentMethod" type="radio" value="Online"
-                          class="custom-control-input" required />
-                        <label class="custom-control-label" for="debit">Online</label>
-                      </div>
-                      <div class="form-group mt-4">
-                        <label for="coupon text-light" style="text-decoration: underline;">
-                          <h4>Apply Coupon</h4>
-                        </label>
-                        <input type="text" class="form-control" id="coupon" aria-describedby="coupon"
-                          placeholder="Enter Coupon" name="coupon">
-                        <small id="coupon" class="text-info">enter coupon code to avail offers</small>
-                      </div>
-                      <h5 class="text-muted mt-4">Amount to be paid</h5>
-                      <table class="table site-block-order-table mb-5">
-                        <thead>
-                          <th>Product</th>
-                          <th>Total</th>
-                        </thead>
-                        <tbody>
-                          <% productData.forEach(function(product) {%>
-                            <tr>
-                              <td>
-                                <%=product.productDetail.name%> <strong class="mx-2">x</strong>
-                                  <%= product.productQuantity%>
-                              </td>
-                              <% var a=product.productDetail.price%>
-                                <% var b=product.productQuantity%>
-                                  <% var c=a*b %>
-                                    <td>
-                                      <%= c %>₹
-                                    </td>
-                            </tr>
-                            <% }) %>
-                              <tr>
-                                <td><b>Total Amout</b></td>
-                                <td>
-                                  <%=sum%> ₹
-                                </td>
-                              </tr>
-                        </tbody>
-                      </table>
-                      <button class="btn btn-primary btn-lg py-3 btn-block mt-5" type="submit" value="submit">Place Order</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">
-                        Add new Address
-                      </h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form action="/addNewAddress" method="post">
-                      <div class="modal-body">
-                        <div class="mb-3">
-                          <label for="recipient-name" class="col-form-label">Housename:</label>
-                          <input required type="text" class="form-control" id="housename" name="housename" />
-                          <p id="houseError" style="color: red"></p>
-                        </div>
-                        <div class="mb-3">
-                          <label for="recipient-name" class="col-form-label">Area:</label>
-                          <input required type="text" class="form-control" id="area" name="area" />
-                          <p id="areaError" style="color: red"></p>
-                        </div>
-                        <div class="mb-3">
-                          <label for="recipient-name" class="col-form-label">Landmark:</label>
-                          <input required type="text" class="form-control" id="landmark" name="landmark" />
-                          <p id="landmarkError" style="color: red"></p>
-                        </div>
-                        <div class="mb-3">
-                          <div class="row">
-                            <div class="col-md-6 mb-3">
-                              <label for="firstName">District</label>
-                              <input required type="text" class="form-control" id="district" name="district" />
-                              <p id="stateError" style="color: red"></p>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                              <label for="lastName">State</label>
-                              <input required type="text" class="form-control" id="state" name="state" />
-                              <p id="pincodeError" style="color: red"></p>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="mb-3">
-                          <div class="row">
-                            <div class="col-md-6 mb-3">
-                              <label for="firstName">Post office</label>
-                              <input required type="text" class="form-control" id="postoffice" name="postoffice" />
-                              <p id="stateError" style="color: red"></p>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                              <label for="lastName">Pincode</label>
-                              <input required type="text" class="form-control" id="pin" name="pin" />
-                              <p id="pincodeError" style="color: red"></p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                          Close
-                        </button>
-                        <button type="submit" value="submit" class="btn btn-primary">
-                          Add
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
+						<div class="container d-flex ">
 
-            </div>
-          </div>
+							<div class="form-group mt-5">
+								<h6>Have coupon?</h6>
+								<div class="input-group"> <input type="text" class="form-control coupon" name="coupon"
+										placeholder="Coupon code"> <span class="input-group-append"></span> </div>
+							</div>
+
+						</div>
+
+
+
+
+
+						<div class="row mt-5 pt-3 d-flex">
+							<div class="col-md-6 d-flex">
+								<div class="cart-detail cart-total bg-light p-3 p-md-4">
+									<h3 class="billing-heading mb-4">Amount to Paid</h3>
+									<p class="d-flex ">
+										<span>Product</span>
+										<span>Total</span>
+										<% productData.forEach(function(product) {%>
+
+									</p>
+									<p class="d-flex">
+										<span>
+											<%=product.productDetail.name%> <strong class="mx-2">x</strong>
+												<%= product.productQuantity%>
+										</span>
+										<% var a=product.productDetail.price%>
+											<% var b=product.productQuantity%>
+												<% var c=a*b %>
+													<td>
+														<span>
+															<%= c %>₹
+														</span>
+									</p>
+									<% }) %>
+										<hr>
+										<p class="d-flex ">
+											<span>Total Amount</span>
+											<span>
+												<%=sum%> ₹
+											</span>
+										</p>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="cart-detail bg-light p-3 p-md-4">
+									<h3 class="billing-heading mb-4">Payment Method</h3>
+									<div class="form-group">
+										<div class="col-md-12">
+											<div class="radio">
+												<label><input type="radio" value="COD" name="paymentMethod" class="mr-2"
+														checked required> COD (cash on delivery)</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-md-12">
+											<div class="radio">
+												<label><input type="radio" value="Online" name="paymentMethod"
+														class="mr-2" checked required>Online</label>
+											</div>
+										</div>
+									</div>
+
+
+									<button style="border: none;background: none;" type="submit" value="submit"><a
+											style="width: 10rem;height: 2rem;color: #000;"
+											class="buy-now btn btn-sm btn-primary ">Place an Order</a></button>
+								</div>
+					</form>
+				</div>
+			</div>
     </section>
     <!--================End Checkout Area =================-->
 

@@ -74,6 +74,8 @@ router.post("/placeOrder", verifyLogin.verifyLoginUser,orderController.placeOrde
 
 router.get('/checkout',verifyLogin.verifyLoginUser,orderController.getCheckOutPage);
 
+router.post("/verifyPayment",verifyLogin.verifyLoginUser,orderController.verifyPayment);
+
 router.get('/orderSuccess',verifyLogin.verifyLoginUser,orderController.orderSuccess)
 
 router.get('/orderDetails', verifyLogin.verifyLoginUser,orderController.orderDetails);

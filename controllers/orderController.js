@@ -7,6 +7,7 @@ const moment = require("moment");
 const mongoose = require("mongoose");
 const promise = require("promise");
 const instance = require("../config/razorpay");
+const crypto = require('crypto')
 
 let countInCart;
 let countInWishlist;
@@ -172,7 +173,7 @@ module.exports = {
                 total = sum - dis;
               }
             }
-            const orderData = new order({
+            const orderData = await order.create({
               userId: userData._id,
               name: userData.name,
               phoneNumber: userData.phone,
@@ -182,55 +183,52 @@ module.exports = {
               paymentMethod: req.body.paymentMethod,
               orderDate: moment().format("MMM Do YY"),
               deliveryDate: moment().add(3, "days").format("MMM Do YY"),
-            });
-            console.log(total)
-            await cart.deleteOne({ userId: userData._id });
+            })
+
+            const amount = orderData.totalAmount * 100
+            const orderId = orderData._id
+            console.log(orderId + "hey this is my order id");
+            
+
 
             if (req.body.paymentMethod === "COD") {
 
-              const orderDatas = await orderData.save();
-              const orderId = orderDatas._id;
+              await order.updateOne({ _id: orderId }, { $set: { orderStatus: 'placed' } })
 
-              await order.updateOne(
-                { _id: orderId },
-                { $set: { orderStatus: "placed" } }
-              );
+              await cart.deleteOne({ userId: userData._id });
 
-              res.redirect("/orderSuccess");
-              await coupon.updateOne(
+              res.json({ success: true });
+              
+              coupon.updateOne(
                 { couponName: data.coupon },
                 { $push: { users: { userId: objId } } }
-              );
+              ).then((updated) => {
+                console.log(updated + "hey this process modified");
+              });
+
             } else {
-              const orderDatas = await orderData.save();
-              const orderId = orderDatas._id;
 
               let options = {
-                amount: total,
+                amount: amount,
                 currency: "INR",
                 receipt: "" + orderId,
               };
-              instance.orders.create(options, async function (err, Order) {
-                await order.updateOne(
-                  { _id: orderId },
-                  { $set: { orderStatus: "placed" } }
-                );
+              instance.orders.create(options, function (err, order) {
+
                 if (err) {
                   console.log(err);
                 } else {
-                  res.json({ order: Order });
-
-                  coupon
-                    .updateOne(
-                      { couponName: data.coupon },
-                      { $push: { users: { userId: objId } } }
-                    )
-                    .then((updated) => {
-                      console.log(updated);
-                      res.redirect("/orderSuccess");
-                    });
+                  res.json({ order: order });
+                  cart.deleteOne({ userId: userData._id });
+                  coupon.updateOne(
+                    { couponName: data.coupon },
+                    { $push: { users: { userId: objId } } }
+                  ).then((updated) => {
+                    console.log(updated);
+                  });
                 }
-              });
+              })
+
             }
           } else {
             res.redirect("/viewCart");
@@ -243,37 +241,40 @@ module.exports = {
     }
   },
 
-  verifyPayment: async (req, res, next) => {
+  verifyPayment: async (req, res) => {
     try {
       const details = req.body;
+      const orderId = details['payment[razorpay_order_id]'];
+      const paymentId = details['payment[razorpay_payment_id]'];
+      const razorpay_signature = details['payment[razorpay_signature]'];
+      const receipt = details['order[receipt]'];
+      
       let hmac = crypto.createHmac("SHA256", process.env.KETSECRET);
-      hmac.update(
-        details.payment.razorpay_order_id +
-        "|" +
-        details.payment.razorpay_payment_id
-      );
+      hmac.update(orderId + "|" + paymentId);
       hmac = hmac.digest("hex");
 
-      if (hmac == details.payment.razorpay_signature) {
-        const objId = mongoose.Types.ObjectId(details.order.receipt);
-        order
-          .updateOne(
-            { _id: objId },
-            { $set: { paymentStatus: "paid", orderStatus: "placed" } }
-          )
-          .then(() => {
-            res.json({ success: true });
-          })
-          .catch((err) => {
-            console.log(err);
-            res.json({ status: false, err_message: "payment failed" });
-          });
+      if (hmac == razorpay_signature) {
+
+        const objId = mongoose.Types.ObjectId(receipt);
+
+        order.updateOne({ _id: objId }, { $set: { paymentStatus: "paid", orderStatus: 'placed' } }).then(() => {
+
+          res.json({ success: true });
+
+        }).catch((err) => {
+          console.log(err);
+          res.json({ status: false, err_message: "payment failed" });
+        })
+
       } else {
         console.log(err);
         res.json({ status: false, err_message: "payment failed" });
       }
-    } catch (err) {
-      next(err);
+
+
+    } catch (error) {
+      console.log(error);
+      res.render("user/error");
     }
   },
 
@@ -376,6 +377,7 @@ module.exports = {
       res.render("user/error");
     }
   },
+
   orderedProduct: async (req, res) => {
     try {
       const id = req.params.id;
@@ -549,77 +551,6 @@ module.exports = {
         },
       ]);
       res.render("admin/orderedProduct", { productData });
-    } catch (error) {
-      console.log(error);
-      res.render("user/error");
-    }
-  },
-
-  orderedProduct: async (req, res) => {
-    try {
-      const id = req.params.id;
-      const session = req.session.user;
-      const userData = await users.findOne({ email: session });
-      const orderDetails = await order
-        .find({ userId: userData._id })
-        .sort({ createdAt: -1 });
-      const objId = mongoose.Types.ObjectId(id);
-      const productData = await order.aggregate([
-        {
-          $match: { _id: objId },
-        },
-        {
-          $unwind: "$orderItems",
-        },
-        {
-          $project: {
-            productItem: "$orderItems.productId",
-            productQuantity: "$orderItems.quantity",
-            productSize: "$orderItems.size",
-            address: 1,
-            name: 1,
-            phonenumber: 1,
-          },
-        },
-        {
-          $lookup: {
-            from: "products",
-            localField: "productItem",
-            foreignField: "_id",
-            as: "productDetail",
-          },
-        },
-        {
-          $project: {
-            productItem: 1,
-            productQuantity: 1,
-            name: 1,
-            phoneNumber: 1,
-            address: 1,
-            productDetail: { $arrayElemAt: ["$productDetail", 0] },
-          },
-        },
-        {
-          $lookup: {
-            from: "categories",
-            localField: "productDetail.category",
-            foreignField: "_id",
-            as: "category_name",
-          },
-        },
-        {
-          $unwind: "$category_name",
-        },
-      ]);
-
-      // console.log(orderDetails);
-
-      res.render("user/orderedProduct", {
-        productData,
-        orderDetails,
-        countInCart,
-        countInWishlist,
-      });
     } catch (error) {
       console.log(error);
       res.render("user/error");

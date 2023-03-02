@@ -61,7 +61,7 @@
                       <div class="col-md-6">
                         <p class="lead fw-bold" style="color: #f37a27">Order Details</p>
                         <a href="/productview/<%= order.productDetail._id %>"><img style="height: 100px; width: 100px"
-                            src="/<%= order.productDetail.image[0] %>" class="img-fluid mb-3" alt="" /></a>
+                            src="/<%= order.productDetail.image[0].path %>" class="img-fluid mb-3" alt="" /></a>
                         <div class="d-flex">
                           <h6>
                             <%= order.productDetail.name %>

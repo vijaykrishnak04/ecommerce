@@ -12,8 +12,6 @@ let countInWishlist;
 module.exports = {
   //add product
 
-  countInCart,
-
   addProduct: async (req, res) => {
     try {
       const category = await categories.find();
@@ -26,16 +24,14 @@ module.exports = {
 
   postProduct: async (req, res) => {
     try {
-      let categoryId = req.body.category;
-      let image = req.files.map((obj) => {
-        return obj?.filename;
-      });
+      const categoryId = req.body.category;
+      const images = req.files.map(file => ({ path: file.filename }))
       const newproduct = products({
         name: req.body.product_name,
         price: req.body.price,
         category: categoryId,
         description: req.body.description,
-        image: image,
+        image: images,
         stock: req.body.stock,
       });
       newproduct
@@ -58,7 +54,8 @@ module.exports = {
       const admin = req.session.admin;
       if (admin) {
         const product = await products.find().populate("category");
-        res.render("admin/productDetails", { product });
+        const productCount = await products.find().count()
+        res.render("admin/productDetails", { product,productCount });
       }
     } catch (error) {
       console.log(error);
@@ -95,35 +92,30 @@ module.exports = {
           },
         }
       );
-      if (req.files) {
-        let image = req.files.map((obj) => {
-          return obj?.filename;
-        });
-        await products.updateOne(
-          { _id: id },
-          {
-            $set: {
-              image: image,
-            },
-          }
-        );
-      }
-      // const directorypath1 = "public" + req.body.image1;
-      // const directorypath2 = "public" + req.body.image2;
-      // const directorypath3 = "public" + req.body.image3;
-      // const path = [directorypath1, directorypath2, directorypath3];
-      // for (i = 0; i < 3; i++) {
-      //   fs.unlink(path[i], (err) => {
-      //     if (err) {
-      //       throw err;
-      //     }
-      //     console.log("Deleted image successfully");
-      //   });
-      // }
       res.redirect("/admin/productDetails");
     } catch (error) {
       console.log(error);
       res.render("user/error");
+    }
+  },
+
+  //image edit
+
+  imageEdit: async (req, res) => {
+    try {
+      const productId = req.params.id;
+      const imageId = req.params.imageId;
+      const imageFile = req.file;
+
+      // update the image with the new file data
+      const result = await products.updateOne(
+        { _id: productId, 'image._id': imageId },
+        { $set: { 'image.$.path': imageFile.filename } }
+      );
+      res.redirect("/admin/productDetails");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal server error');
     }
   },
 

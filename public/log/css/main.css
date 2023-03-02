@@ -185,7 +185,7 @@ iframe {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 100px 90px 100px 90px;
+  padding: 60px 90px 60px 90px;
 }
 
 /*------------------------------------------------------------------
@@ -386,7 +386,7 @@ iframe {
 
 @media (max-width: 576px) {
   .wrap-login100 {
-    padding: 100px 15px 33px 15px;
+    padding: 0px 15px 20px 15px;
   }
 }
 

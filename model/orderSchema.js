@@ -1,65 +1,94 @@
 const mongoose = require('mongoose');
-const Schema   = mongoose.Schema
+const Schema = mongoose.Schema
 const ObjectId = Schema.ObjectId
 
 const orderSchema = new Schema(
     {
-        userId:{
-           type:ObjectId,
-           required:true
+        userId: {
+            type: ObjectId,
+            required: true
         },
-        name:{
-            type:String,
-            requiredd:true
+        name: {
+            type: String,
+            required: true
         },
-        address:{
-           type:String,
-           required:true
+        houseName: {
+            type: String,
+
         },
-        phoneNumber:{ 
-            type:Number,
-            required:true
+
+        area: {
+            type: String,
+
+
         },
-        orderItems:[
+
+        landMark: {
+            type: String,
+
+
+        },
+        district: {
+            type: String,
+
+
+        },
+        state: {
+            type: String,
+
+
+        },
+
+        postOffice: {
+            type: String,
+
+
+        },
+        pin: {
+            type: Number,
+
+
+        },
+        orderItems: [
             {
-                productId:{
-                    type:ObjectId,
-                    required:true
+                productId: {
+                    type: ObjectId,
+                    required: true
                 },
-                quantity:{
-                    type:Number,
-                    required:true
+                quantity: {
+                    type: Number,
+                    required: true
                 },
             }
         ],
-        totalAmount:{
-            type:Number,
-            required:true
+        totalAmount: {
+            type: Number,
+            required: true
         },
-        orderStatus:{
-            type:String,
-            default:"pending"
+        orderStatus: {
+            type: String,
+            default: "pending"
         },
         paymentMethod:
         {
-            type:String,
-            required:true
+            type: String,
+            required: true
         },
-        paymentStatus:{
-         type:String,
-         default:"not paid"
+        paymentStatus: {
+            type: String,
+            default: "not paid"
         },
-        orderDate:{
-            type:String,
+        orderDate: {
+            type: String,
         },
-        deliveryDate:{
-            type:String
+        deliveryDate: {
+            type: String
         }
-    }, 
+    },
     {
-        timestamps:true
+        timestamps: true
     }
 );
 
-const order= mongoose.model("order",orderSchema)
+const order = mongoose.model("order", orderSchema)
 module.exports = order;

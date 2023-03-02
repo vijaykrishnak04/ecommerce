@@ -30,13 +30,13 @@
         <div class="col-lg-6">
           <div class="s_Product_carousel">
             <div class="single-prd-item">
-              <img class="img-fluid" src="/<%=products.image[0]%>" alt="" />
+              <img class="img-fluid" src="/<%=products.image[0].path%>" alt="" />
             </div>
             <div class="single-prd-item">
-              <img class="img-fluid" src="/<%=products.image[1]%>" alt="" />
+              <img class="img-fluid" src="/<%=products.image[1].path%>" alt="" />
             </div>
             <div class="single-prd-item">
-              <img class="img-fluid" src="/<%=products.image[2]%>" alt="" />
+              <img class="img-fluid" src="/<%=products.image[2].path%>" alt="" />
             </div>
           </div>
         </div>
@@ -65,7 +65,7 @@
               >
                 Add to Cart
               </button>
-              <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
+              <a class="icon_btn" onclick="addToWishlist('<%= products._id %>')"><i class="lnr lnr lnr-heart"></i></a>
             </div>
           </div>
         </div>
@@ -349,7 +349,7 @@
           </div>
         </div>
         <div
-          class="tab-pane fade  active"
+          class="tab-pane fade"
           id="review"
           role="tabpanel"
           aria-labelledby="review-tab"

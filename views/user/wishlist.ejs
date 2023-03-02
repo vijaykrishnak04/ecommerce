@@ -1,0 +1,96 @@
+<%- include ("../layout/layout2") %>
+
+<body>
+  <!-- Start Header Area -->
+  <%- include ("../partials/userHeader") %>
+  <!-- End Header Area -->
+
+  <!-- Start Banner Area -->
+  <section class="banner-area organic-breadcrumb">
+    <div class="container">
+      <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+        <div class="col-first">
+          <h1>wishlist</h1>
+          <nav class="d-flex align-items-center">
+            <a href="/">Home<span class="lnr lnr-arrow-right"></span></a>
+            <a href="#">wishlist</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End Banner Area -->
+
+  <!--================Cart Area =================-->
+  <section class="cart_area">
+    <div class="site-section">
+      <% if (locals.countInWishlist!==0) { %>
+      <div class="container">
+        <div class="row">
+          <div class="col-12 ftco-animate">
+            <div class="cart-list mt-3 mb-5">
+              <table class="table table-responsive-sm">
+                <thead class="thead-primary">
+                  <tr class="text-center">
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th class="d-none d-md-table-cell">Product View</th>
+                    <th>Remove</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% wishlistData.forEach((product)=>{%>
+                  <tr class="text-center">
+                    <td class="image-prod">
+                      <a href="/productView/<%= product?.productDetail?._id %>">
+                        <img style="width: 100px" src="<%= product.productDetail.image[0].path %>" alt="Image" class="img-fluid" />
+                      </a>
+                    </td>
+                    <td class="product-name text-black">
+                      <p class="text-black-50 font-weight-bold"><%= product?.productDetail?.name %></p>
+                    </td>
+                    <td class="price"><%= product?.productDetail?.price %></td>
+                    <td class="d-none d-md-table-cell">
+                      <a href="/productView/<%= product?.productDetail?._id %>">
+                        <button class="btn" id="shopNow-button">Shop Now</button>
+                      </a>
+                    </td>
+                    <td class="product-remove">
+                      <button onclick="removeFromWishlist('<%= product._id %>','<%= product.productDetail._id %>')" class="btn btn-outline-danger">remove</button>
+                    </td>
+                  </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <% } else { %>
+
+      <div class="p-3 m-3">
+        <img src="/images/emptyCart.png" style="width: 40%; height: 40%" class="img-fluid rounded mx-auto d-block mb-5" alt="image" />
+        <h2 class="text-center text-primary">Oops!</h2>
+        <h3 class="text-center text-primary">Your wishlist is empty</h3>
+      </div>
+      <% } %>
+      <div class="order_details section_gap">
+        <div class="container ">
+          <div class="d-flex justify-content-center">
+            <a href="/shop"><button class="btn btn-outline-warning btn-sm btn-block">
+                Continue Shopping
+              </button></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+  <!--================End Cart Area =================-->
+
+  <!-- start footer Area -->
+  <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.js"></script> -->
+  <%- include ("../partials/userFooter") %>
+</body>

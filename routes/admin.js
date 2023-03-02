@@ -37,7 +37,9 @@ adminRouter.get('/productDetails',verifylogin.verifyLoginAdmin,productController
 
 adminRouter.get('/editProduct/:id',verifylogin.verifyLoginAdmin,productController.editProduct)
 
-adminRouter.post('/postEditproduct/:id',verifylogin.verifyLoginAdmin,upload.array('image',3),productController.postEditProduct)
+adminRouter.post('/postEditproduct/:id',verifylogin.verifyLoginAdmin,productController.postEditProduct)
+
+adminRouter.post('/editimage/:id/:imageId',verifylogin.verifyLoginAdmin,upload.single('images'),productController.imageEdit)
 
 adminRouter.delete('/deleteProduct/:id',verifylogin.verifyLoginAdmin,productController.deleteProduct);
 

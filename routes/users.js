@@ -3,6 +3,7 @@ const userController = require('../controllers/userController');
 const productController = require('../controllers/productController')
 const cartController = require('../controllers/cartController')
 const orderController = require('../controllers/orderController')
+const wishlistController = require('../Controllers/wishlistController')
 const router = express() 
 const verifyLogin= require("../middlewares/session");
 
@@ -46,8 +47,6 @@ router.get('/editPassword',verifyLogin.verifyLoginUser,userController.getResetpa
 
 router.post('/postEditPassword',verifyLogin.verifyLoginUser,userController.postResetPassword)
 
-
-
 //product view
 
 router.get('/shop',productController.getShopPage);
@@ -56,15 +55,23 @@ router.get('/category/:id',productController.getCategoryWisePage);
 
 router.get('/productView/:id',productController.getProductViewPage);
 
+//wishlist manage
+
+router.get('/viewWishlist',verifyLogin.verifyLoginUser,wishlistController.viewWishlist)
+
+router.get('/wishList/:id',verifyLogin.verifyLoginUser,wishlistController.addToWishlist);
+
+router.post('/removeFromWishlist',verifyLogin.verifyLoginUser,wishlistController.removeFromWishlist);
+
 //cart manage
 
 router.get('/viewcart',verifyLogin.verifyLoginUser,cartController.viewCart);
 
 router.get('/cart/:id',verifyLogin.verifyLoginUser,cartController.addToCart)
 
-router.post('/removeProduct', cartController.removeProduct);
+router.post('/removeProduct',verifyLogin.verifyLoginUser, cartController.removeProduct);
 
-router.post('/changeQuantity',cartController.changeQuantity);
+router.post('/changeQuantity',verifyLogin.verifyLoginUser,cartController.changeQuantity);
 
 //checkout page and order management
 
@@ -83,5 +90,7 @@ router.get('/orderDetails', verifyLogin.verifyLoginUser,orderController.orderDet
 router.get('/orderedProduct/:id',verifyLogin.verifyLoginUser,orderController.orderedProduct);
 
 router.get('/cancelOrder/:id',verifyLogin.verifyLoginUser,orderController.cancelOrder);
+
+router.get('/getAddressDetails/:userId',verifyLogin.verifyLoginUser,orderController.fetchAddress)
 
 module.exports = router;

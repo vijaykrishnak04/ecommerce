@@ -84,12 +84,32 @@ module.exports = {
       }, 0);
       const query = req.query;
       await order.deleteOne({ _id: query.orderId });
+
       res.render("user/checkout", { productData, sum, userData });
     } catch (error) {
       console.log(error);
       res.render("user/error");
     }
   },
+
+  fetchAddress: async (req, res, next) => {
+    try {
+      const addressId = req.params.userId
+      const session = req.session.user
+      const userData = await users.findOne({ email: session })
+      console.log(userData, 2);
+      const addressDetails = userData.addressDetails.id(addressId);
+      if (!addressDetails) {
+        return res.status(404).json({ message: 'Address not found' })
+      }
+      res.json(addressDetails)
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: 'internal server error' })
+      next(err)
+    }
+  },
+
   placeOrder: async (req, res) => {
     try {
       let invalid;
@@ -101,7 +121,6 @@ module.exports = {
       const objId = mongoose.Types.ObjectId(userData._id);
       if (data.coupon) {
         invalid = await coupon.findOne({ couponName: data.coupon });
-        // console.log(invalid);
         if (invalid?.delete == true) {
           couponDeleted = true;
         }
@@ -115,7 +134,6 @@ module.exports = {
         res.json({ couponDeleted: true });
       } else {
         const discount = await checkCoupon(data, objId);
-        // console.log(discount);
         if (discount == true) {
           res.json({ coupon: true });
         } else {
@@ -176,29 +194,35 @@ module.exports = {
             const orderData = await order.create({
               userId: userData._id,
               name: userData.name,
-              phoneNumber: userData.phone,
-              address: req.body.address,
+              phoneNumber: userData.phonenumber,
+              houseName: req.body.housename,
+              area: req.body.area,
+              landMark: req.body.landMark,
+              district: req.body.district,
+              state: req.body.state,
+              postOffice: req.body.postOffice,
+              pin: req.body.pincode,
               orderItems: cartData.product,
               totalAmount: total,
               paymentMethod: req.body.paymentMethod,
               orderDate: moment().format("MMM Do YY"),
-              deliveryDate: moment().add(3, "days").format("MMM Do YY"),
+              deliveryDate: moment().add(3, "days").format("MMM Do YY")
             })
 
             const amount = orderData.totalAmount * 100
             const orderId = orderData._id
             console.log(orderId + "hey this is my order id");
-            
+
 
 
             if (req.body.paymentMethod === "COD") {
 
               await order.updateOne({ _id: orderId }, { $set: { orderStatus: 'placed' } })
 
-              await cart.deleteOne({ userId: userData._id });
+              await cart.findOneAndDelete({ userId: userData._id });
 
               res.json({ success: true });
-              
+
               coupon.updateOne(
                 { couponName: data.coupon },
                 { $push: { users: { userId: objId } } }
@@ -219,7 +243,7 @@ module.exports = {
                   console.log(err);
                 } else {
                   res.json({ order: order });
-                  cart.deleteOne({ userId: userData._id });
+                  cart.findOneAndDelete({ userId: userData._id });
                   coupon.updateOne(
                     { couponName: data.coupon },
                     { $push: { users: { userId: objId } } }
@@ -228,7 +252,6 @@ module.exports = {
                   });
                 }
               })
-
             }
           } else {
             res.redirect("/viewCart");
@@ -248,7 +271,7 @@ module.exports = {
       const paymentId = details['payment[razorpay_payment_id]'];
       const razorpay_signature = details['payment[razorpay_signature]'];
       const receipt = details['order[receipt]'];
-      
+
       let hmac = crypto.createHmac("SHA256", process.env.KETSECRET);
       hmac.update(orderId + "|" + paymentId);
       hmac = hmac.digest("hex");
@@ -434,8 +457,6 @@ module.exports = {
           $unwind: "$category_name",
         },
       ]);
-
-      // console.log(orderDetails);
 
       res.render("user/orderedProduct", {
         productData,

@@ -1,139 +1,300 @@
 <%- include ("../layout/layout2") %>
+
 <body>
 
-    <!-- Start Header Area -->
-	<%- include ("../partials/userHeader") %>
-	<!-- End Header Area -->
+  <!-- Start Header Area -->
+  <%- include ("../partials/userHeader") %>
+  <!-- End Header Area -->
 
-    <!-- Start Banner Area -->
-    <section class="banner-area organic-breadcrumb">
-        <div class="container">
-            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
-                <div class="col-first">
-                    <h1>Checkout</h1>
-                    <nav class="d-flex align-items-center">
-                        <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
-                        <a href="single-product.html">Checkout</a>
-                    </nav>
-                </div>
-            </div>
+  <!-- Start Banner Area -->
+  <section class="banner-area organic-breadcrumb">
+    <div class="container">
+      <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+        <div class="col-first">
+          <h1>Checkout</h1>
+          <nav class="d-flex align-items-center">
+            <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+            <a href="single-product.html">Checkout</a>
+          </nav>
         </div>
-    </section>
-    <!-- End Banner Area -->
+      </div>
+    </div>
+  </section>
+  <!-- End Banner Area -->
 
-    <!--================Checkout Area =================-->
-    <section class="checkout_area section_gap">
-      <div class="row justify-content-center">
-				<div class="col-xl-10 ftco-animate">
+  <!--================Checkout Area =================-->
+  <section class="checkout_area section_gap">
+    <div class="row justify-content-center">
+      <div class="col-xl-10 ftco-animate">
 
-					<!--  -->
+        <!-- Address edit -->
+        <section class="ftco-section">
+          <form id="placeOrder">
 
-					<div class="container pb-5">
-						<button type="button" class="btn btn-primary" data-bs-toggle="modal"
-							data-bs-target="#exampleModal">
-							Add new address
-						</button>
-						<button type="button" class="btn btn-primary" data-bs-toggle="modal"
-							data-bs-target="#editAddress">
-							Edit Address
-						</button>
-					</div>
-
-					<h5>
-						Select Shipping address
-					</h5>
-					<form id="placeOrder">
-						<select class="form-select mt-2" required name="address" style="width: 20rem">
-							<% userData.addressDetails.forEach((address)=>{%>
-								<option name="address">
-									<%= address.housename %>,<%= address.postoffice%>,<%= address.landmark %>,
-												<%=address.area %>,<%= address.district %>,<%= address.pin %>,
-															<%=address.state %>
-								</option>
-								<% }) %>
-						</select>
-
-						<!-- Button trigger modal -->
-
-						<div class="container d-flex ">
-
-							<div class="form-group mt-5">
-								<h6>Have coupon?</h6>
-								<div class="input-group"> <input type="text" class="form-control coupon" name="coupon"
-										placeholder="Coupon code"> <span class="input-group-append"></span> </div>
-							</div>
-
-						</div>
+            <div class="container-fluid">
 
 
+              <div class="col-xl-10 ftco-animate fadeInUp ftco-animated">
+                <div class="row justify-content-center">
+                  <div class="container pb-4">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                      Add new address
+                    </button>
+                  </div>
+                  <h3 class="mb-4 billing-heading">Billing Details</h3>
+
+                  <div>
+                    <div class="form-group">
+                      <label for="country">Select Shipping Address
+                      </label>
+                      <div class="select-wrap">
+
+                        <select required aria-placeholder="select your address" class="form-control form-select mt-2" style="color: #000;" onchange="updateAddressDetails(this.value)">
+                         
+                          <% if (userData.addressDetails &&
+                            userData.addressDetails.length> 0)
+                            { %>
+                          <% for (let i=0; i < userData.addressDetails.length; i++) {
+                              %>
+
+                          <option value="<%= userData.addressDetails[i]._id %>">
+                            <%= userData.addressDetails[i].username %>
+                            <%= userData.addressDetails[i].housename%>
+                          </option>
+
+                          <% } %>
+                          <% } else { %>
+                          <p>No address selected</p>
+                          <% } %>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row align-items-end">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="firstname">House Name</label>
+                        <input type="text" name="housename" id="housename" style="font-weight: bold; color: rgb(92, 92, 92) !important;" class="form-control" placeholder="" fdprocessedid="ib393">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="lastname">Area</label>
+                        <input type="text" id="area" name="area" style="font-weight: bold; color:rgb(92, 92, 92) !important;" class="form-control" placeholder="" fdprocessedid="4xtq1b">
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="streetaddress">Land Mark</label>
+                        <input type="text" id="landmark" name="landMark" style="font-weight: bold; color: rgb(92, 92, 92) !important;" class="form-control" placeholder="" fdprocessedid="iwf96m">
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="streetaddress">District</label>
+                        <input type="text" id="district" name="district" style="font-weight: bold; color: rgb(92, 92, 92) !important;" class="form-control" placeholder="" fdprocessedid="4xtq1b">
+                      </div>
+                    </div>
+
+                    <div class="w-100"></div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="towncity">State</label>
+                        <input type="text" id="state" name="state" style="font-weight: bold; color: rgb(92, 92, 92) !important;" class="form-control" placeholder="" fdprocessedid="4iwr3">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="postcodezip">Post Office</label>
+                        <input type="text" id="postoffice" name="postOffice" style="font-weight: bold; color: rgb(92, 92, 92) !important;" class="form-control" placeholder="" fdprocessedid="y5r53">
+                      </div>
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="phone">Pincode</label>
+                        <input type="number" id="pincode" name="pincode" style="font-weight: bold; color: rgb(92, 92, 92) !important;" class="form-control" placeholder="" fdprocessedid="w97al9">
+                      </div>
+                    </div>
+
+                    <div class="container d-flex ">
+
+                      <div class="form-group mt-5">
+                        <h6>Have coupon? Apply here!</h6>
+                        <div class="input-group"> <input type="text" class="form-control coupon" name="coupon" placeholder="Coupon code"> <span class="input-group-append"></span>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
 
 
 
-						<div class="row mt-5 pt-3 d-flex">
-							<div class="col-md-6 d-flex">
-								<div class="cart-detail cart-total bg-light p-3 p-md-4">
-									<h3 class="billing-heading mb-4">Amount to Paid</h3>
-									<p class="d-flex ">
-										<span>Product</span>
-										<span>Total</span>
-										<% productData.forEach(function(product) {%>
-
-									</p>
-									<p class="d-flex">
-										<span>
-											<%=product.productDetail.name%> <strong class="mx-2">x</strong>
-												<%= product.productQuantity%>
-										</span>
-										<% var a=product.productDetail.price%>
-											<% var b=product.productQuantity%>
-												<% var c=a*b %>
-													<td>
-														<span>
-															<%= c %>₹
-														</span>
-									</p>
-									<% }) %>
-										<hr>
-										<p class="d-flex ">
-											<span>Total Amount</span>
-											<span>
-												<%=sum%> ₹
-											</span>
-										</p>
-								</div>
-							</div>
-
-							<div class="col-md-6">
-								<div class="cart-detail bg-light p-3 p-md-4">
-									<h3 class="billing-heading mb-4">Payment Method</h3>
-									<div class="form-group">
-										<div class="col-md-12">
-											<div class="radio">
-												<label><input type="radio" value="COD" name="paymentMethod" class="mr-2"
-														checked required> COD (cash on delivery)</label>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="col-md-12">
-											<div class="radio">
-												<label><input type="radio" value="Online" name="paymentMethod"
-														class="mr-2" checked required>Online</label>
-											</div>
-										</div>
-									</div>
 
 
-									<button style="border: none;background: none;" type="submit" value="submit"><a
-											style="width: 10rem;height: 2rem;color: #000;"
-											class="buy-now btn btn-sm btn-primary ">Place an Order</a></button>
-								</div>
-					</form>
-				</div>
-			</div>
-    </section>
-    <!--================End Checkout Area =================-->
+            <div class="row mt-5 pb-5 d-flex">
+              <div class="col-md-6 d-flex">
+                <div class="cart-detail cart-total bg-light p-3 p-md-4">
+                  <h3 class="billing-heading mb-4">Order Summary</h3>
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% productData.forEach(function(product) {%>
+                      <% var a=product.productDetail.price%>
+                      <% var b=product.productQuantity%>
+                      <% var c=a*b %>
+                      <tr>
+                        <td><%=product.productDetail.name%></td>
+                        <td><%=product.productQuantity%></td>
+                        <td><%=c%> ₹</td>
+                      </tr>
+                      <% }) %>
+                      <tr>
+                        <td colspan="2">Total Amount:</td>
+                        <td><%=sum%> ₹</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
 
-    <!-- start footer Area -->
-    
-    <%- include ("../partials/userFooter") %>
+              </div>
+
+              <div class="col-md-6">
+                <div class="cart-detail bg-light p-3 p-md-4">
+                  <h3 class="billing-heading mb-4">Payment Method</h3>
+                  <div class="form-group">
+                    <div class="col-md-12">
+                      <div class="radio">
+                        <label><input type="radio" value="COD" name="paymentMethod" class="mr-2" checked required> COD (cash on
+                          delivery)</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-12">
+                      <div class="radio">
+                        <label><input type="radio" value="Online" name="paymentMethod" class="mr-2" checked required>Online</label>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <button style="border: none;background: none;" type="submit" value="submit"><a style="width: 10rem;height: 2rem;color: #000;" class="buy-now btn btn-sm btn-primary ">Place an Order</a>
+                  </button>
+
+                </div>
+              </div>
+            </div>
+          </form>
+
+        </section>
+      </div>
+    </div>
+
+    <!--================Add address modal Area =================-->
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add new Address</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form action="/addNewAddress" method="post">
+              <div class="modal-body">
+                <div class="mb-1">
+                  <label for="recipient-name" class="col-form-label">Housename:</label>
+                  <input required type="text" class="form-control" id="housename" name="housename" />
+                </div>
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">Area:</label>
+                  <input required type="text" class="form-control" id="area" name="area" />
+                </div>
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">Landmark:</label>
+                  <input required type="text" class="form-control" id="landmark" name="landmark" />
+                </div>
+                <div class="mb-3">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="firstName">District</label>
+                      <input required type="text" class="form-control" id="district" name="district" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="lastName">State</label>
+                      <input required type="text" class="form-control" id="state" name="state" />
+
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="firstName">Post office</label>
+                      <input required type="text" class="form-control" id="postoffice" name="postoffice" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="lastName">Pincode</label>
+                      <input required type="text" class="form-control" id="pin" name="pin" />
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+            <button type="submit" value="submit" class="btn btn-primary">
+              Add
+            </button>
+          </div>
+        </div>
+        </form>
+      </div>
+    </div>
+  </section>
+  <!--================End Checkout Area =================-->
+
+
+  <!-- start footer Area -->
+
+  <%- include ("../partials/userFooter") %>
+  <script>
+    async function updateAddressDetails(addressId) {
+      const res = await fetch('/getAddressDetails/' + addressId)
+      const data = await res.json();
+      if (data.message === 'Address not found') {
+        document.querySelector('#housename').value = "";
+        document.querySelector('#area').value = "";
+        document.querySelector('#landmark').value = "";
+        document.querySelector('#district').value = "";
+        document.querySelector('#state').value = "";
+        document.querySelector('#postoffice').value = "";
+        document.querySelector('#pincode').value = "";
+      } else {
+        document.querySelector('#housename').value = data.housename
+        document.querySelector('#area').value = data.area
+        document.querySelector('#landmark').value = data.landMark
+        document.querySelector('#district').value = data.district
+        document.querySelector('#state').value = data.postoffice
+        document.querySelector('#postoffice').value = data.state
+        document.querySelector('#pincode').value = data.pin;
+      }
+    }
+  </script>

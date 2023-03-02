@@ -16,10 +16,10 @@ module.exports = {
   getHome: async (req, res) => {
     try {
 
-      let session = req.session.user;
-      let product = await products.find({ delete: false }).populate("category");
-      let bannerData = await banner.find().sort({ createdAt: -1 }).limit(1);
-      const category = await categories.find();
+      const session = req.session.user;
+      const product = await products.find({ delete: false }).populate("category");
+      const bannerData = await banner.find().sort({ createdAt: -1 }).limit(1);
+      const category = await categories.find().limit(4);
       if (session) {
         customer = true;
       } else {
@@ -48,9 +48,6 @@ module.exports = {
             userData.password
           );
           if (passwordMatch) {
-            console.log(userData._id);
-            countInCart = cart.findOne({ userId: userData._id })
-            console.log(countInCart);
             req.session.user = req.body.email;
             res.redirect("/");
           } else {
@@ -72,7 +69,7 @@ module.exports = {
   //logout
 
   userLogout: (req, res) => {
-    req.session.destroy();
+    req.session.user = null;
     res.redirect("/");
   },
 
@@ -101,8 +98,7 @@ module.exports = {
         };
         mailSender(User).then(async (mailer) => {
           if (mailer) {
-            let userData = await otp.findOne({ email: email });
-            console.log(userData)
+            const userData = await otp.findOne({ email: email });
             res.render("user/otp", { userData });
           } else {
             console.log("otp sending failed");
@@ -119,7 +115,6 @@ module.exports = {
     try {
       const body = req.body;
       const cotp = body.otp;
-      console.log(cotp);
       const sendOtp = await otp.findOne({ email: body.email });
       const validOtp = await bcrypt.compare(cotp, sendOtp.otp);
       if (validOtp) {
@@ -130,8 +125,9 @@ module.exports = {
           phone: body.phone,
           password: body.password,
         });
+        await otp.findOneAndDelete({ email: body.email })
       } else {
-        let userData = await otp.findOne({ email: body.email });
+        const userData = await otp.findOne({ email: body.email });
         res.render("user/otp", { userData, invalid: "invalid otp" });
       }
     } catch (error) {
@@ -169,7 +165,7 @@ module.exports = {
   },
 
   postForgotOtp: async (req, res) => {
-    let userData = req.query;
+    const userData = req.query;
     try {
       const body = req.body;
       const cotp = body.otp;
@@ -204,15 +200,15 @@ module.exports = {
     }
   },
 
-  getResetpassword: (req,res)=>{
+  getResetpassword: (req, res) => {
     res.render('user/editPassword')
   },
 
   postResetPassword: async (req, res) => {
     try {
       Email = req.session.user
-      let password = req.body.password
-      let userData = await users.findOne()
+      const password = req.body.password
+      const userData = await users.findOne()
       const passwordMatch = await bcrypt.compare(
         password,
         userData.password
@@ -229,9 +225,9 @@ module.exports = {
           .then(() => {
             res.redirect("/viewProfile");
           });
-      }else{
+      } else {
         console.log("password not match")
-        res.render('user/editPassword',{ error: "invalid Password" })
+        res.render('user/editPassword', { error: "invalid Password" })
       }
 
     } catch (error) {
@@ -245,7 +241,7 @@ module.exports = {
   viewProfile: async (req, res) => {
     try {
       const session = req.session.user;
-      let userData = await users.findOne({ email: session });
+      const userData = await users.findOne({ email: session });
       res.render("user/profile", { userData });
     } catch (error) {
       console.log(error);
@@ -256,7 +252,7 @@ module.exports = {
   editProfile: async (req, res) => {
     try {
       const session = req.session.user;
-      let userData = await users.findOne({ email: session });
+      const userData = await users.findOne({ email: session });
       res.render("user/editProfile", { userData });
     } catch (error) {
       console.log(error);
@@ -277,7 +273,7 @@ module.exports = {
               {
                 housename: req.body.housename,
                 area: req.body.area,
-                landmark: req.body.landmark,
+                landMark: req.body.landmark,
                 district: req.body.district,
                 state: req.body.state,
                 postoffice: req.body.postoffice,
@@ -298,10 +294,11 @@ module.exports = {
   addNewAddress: async (req, res) => {
     try {
       const session = req.session.user
+      console.log(req.body);
       const addObj = {
         housename: req.body.housename,
         area: req.body.area,
-        landmark: req.body.landmark,
+        landMark: req.body.landmark,
         district: req.body.district,
         state: req.body.state,
         postoffice: req.body.postoffice,

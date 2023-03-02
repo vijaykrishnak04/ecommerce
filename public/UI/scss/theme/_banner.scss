@@ -13,16 +13,14 @@
 		.owl-nav {
 			position: absolute;
 			right: 0;
-			bottom: -200px;
+			
 			@media (max-width: 1920px) {
 				right: -115px;
 			}
 			@media (max-width: 1680px) {
 				right: 0px;
 			}
-			@media (max-width: 991px) {
-				display: none;
-			}
+			
 			.owl-prev,
 			.owl-next {
 				display: inline-block;
@@ -52,11 +50,6 @@
 		}
 		p {
 			margin: 0;
-		}
-	}
-	.banner-img {
-		@media (max-width: 991px) {
-			display: none;
 		}
 	}
 }

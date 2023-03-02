@@ -4,7 +4,8 @@ module.exports = {
     getCouponPage: async (req, res) => {
         try {
             const couponData = await coupon.find()
-            res.render('admin/coupon', { couponData });
+            const couponCount = await coupon.find().count()
+            res.render('admin/coupon', { couponData, couponCount });
         } catch (error) {
             console.log(error);
             res.render("user/error");
@@ -14,15 +15,15 @@ module.exports = {
     addCoupon: (req, res) => {
         try {
             const data = req.body;
-            const dis = parseInt(data.discount);
-            const maxLimit = parseInt(data.maxLimit);
+            const dis = data.discount;
+            const maxLimit = data.maxLimit;
             const discount = dis / 100;
             coupon.create({
                 couponName: data.couponName,
                 discount: discount,
                 maxLimit: maxLimit,
                 expirationTime: data.expirationTime,
-            }).then((data) => {
+            }).then(() => {
                 // console.log(data);
                 res.redirect("/admin/coupon")
             });

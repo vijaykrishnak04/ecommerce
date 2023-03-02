@@ -13,7 +13,7 @@
           <hr />
           <p>Your complete electronics buying solution</p>
         </div>
-        <form                  
+        <form
           class="login100-form validate-form"
           action="/signup"
           method="post"
@@ -21,10 +21,7 @@
         >
           <span class="login100-form-title"> Create new account </span>
 
-          <div
-            class="wrap-input100 validate-input"
-            data-validate="Full name is required"
-          >
+          <div class="wrap-input100">
             <input
               class="input100"
               type="text"
@@ -36,13 +33,10 @@
             <span class="symbol-input100">
               <i class="fa fa-envelope" aria-hidden="true"></i>
             </span>
-            <small id="nameError" class="text-danger err"></small>
           </div>
+          <small id="nameError" class="text-danger err"></small>
 
-          <div
-            class="wrap-input100 validate-input"
-            data-validate="Valid email is required: ex@abc.xyz"
-          >
+          <div class="wrap-input100">
             <input
               class="input100"
               type="text"
@@ -54,13 +48,10 @@
             <span class="symbol-input100">
               <i class="fa fa-envelope" aria-hidden="true"></i>
             </span>
-            <small id="emailError" class="text-danger err"></small>
           </div>
+          <small id="emailError" class="text-danger err"></small>
 
-          <div
-            class="wrap-input100 validate-input"
-            data-validate="Valid phone is required"
-          >
+          <div class="wrap-input100">
             <input
               class="input100"
               type="text"
@@ -72,13 +63,10 @@
             <span class="symbol-input100">
               <i class="fa fa-phone" aria-hidden="true"></i>
             </span>
-            <small id="phoneError" class="text-danger err"></small>
           </div>
+          <small id="phoneError" class="text-danger err"></small>
 
-          <div
-            class="wrap-input100 validate-input"
-            data-validate="Password is required"
-          >
+          <div class="wrap-input100">
             <input
               class="input100"
               type="password"
@@ -90,13 +78,10 @@
             <span class="symbol-input100">
               <i class="fa fa-lock" aria-hidden="true"></i>
             </span>
-            <small id="passwordError" class="text-danger err"></small>
           </div>
+          <small id="passwordError" class="text-danger err"></small>
 
-          <div
-            class="wrap-input100 validate-input"
-            data-validate="Password is required"
-          >
+          <div class="wrap-input100">
             <input
               class="input100"
               type="password"
@@ -108,8 +93,8 @@
             <span class="symbol-input100">
               <i class="fa fa-lock" aria-hidden="true"></i>
             </span>
-            <small id="confirmPasswordError" class="text-danger err"></small>
           </div>
+          <small id="confirmPasswordError" class="text-danger err"></small>
 
           <% if(locals.invalid){%>
           <small class="text-danger"><%=invalid%></small>

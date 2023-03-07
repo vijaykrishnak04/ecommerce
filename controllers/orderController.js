@@ -222,7 +222,7 @@ module.exports = {
                   { couponName: data.coupon },
                   { $push: { users: { userId: objId } } }
                 )
-                
+
               })
 
             } else if (req.body.paymentMethod === "Wallet") {
@@ -264,6 +264,46 @@ module.exports = {
                 })
 
               }
+
+            } else if (req.body.paymentMethod = "Wallet and Online") {
+
+              const orderDatas = await orderData.save()
+              const orderId = orderDatas._id
+
+              const updatedWalletTotal = 0;
+              const updatedWalletDetails = userData.walletDetails.concat({
+                transactionType: 'Purchase',
+                amount: userData.walletTotal,
+                orderDetails: orderData._id,
+                date: new Date()
+              });
+
+              await users.updateOne(
+                { _id: userData._id },
+                { $set: { walletTotal: updatedWalletTotal, walletDetails: updatedWalletDetails } }
+              );
+
+              let balance = orderDatas.totalAmount - userData.walletTotal
+              const amount = balance * 100
+
+              let options = {
+                amount: amount,
+                currency: "INR",
+                receipt: "" + orderId,
+              };
+              instance.orders.create(options, function (err, order) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  res.json({ order: order });
+                  coupon.updateOne(
+                    { couponName: data.coupon },
+                    { $push: { users: { userId: objId } } }
+                  ).then((updated) => {
+                    console.log(updated);
+                  });
+                }
+              })
 
             } else {
 
@@ -610,24 +650,27 @@ module.exports = {
     try {
       const data = req.params.id;
       const orderData = await order.findOne({ _id: data })
-      const refundAmount = orderData.totalAmount
       const userData = await users.findOne({ _id: orderData.userId });
 
+      if (orderData.paymentStatus == "Paid") {
+        const refundAmount = orderData.totalAmount
+        const updatedWalletTotal = userData.walletTotal + refundAmount;
+        const updatedWalletDetails = userData.walletDetails.concat({
+          transactionType: 'refund',
+          amount: refundAmount,
+          orderDetails: orderData._id,
+          date: new Date()
+        });
 
-      const updatedWalletTotal = userData.walletTotal + refundAmount;
-      const updatedWalletDetails = userData.walletDetails.concat({
-        transactionType: 'refund',
-        amount: refundAmount,
-        orderDetails: orderData._id,
-        date: new Date()
-      });
+        await users.updateOne(
+          { _id: orderData.userId },
+          { $set: { walletTotal: updatedWalletTotal, walletDetails: updatedWalletDetails } }
+        );
+      }
 
-      await users.updateOne(
-        { _id: orderData.userId },
-        { $set: { walletTotal: updatedWalletTotal, walletDetails: updatedWalletDetails } }
-      );
       await order.updateOne({ _id: data }, { $set: { orderStatus: "cancelled" } })
       res.redirect("/orderDetails");
+
     } catch (err) {
       next(err)
     }

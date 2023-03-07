@@ -1,22 +1,25 @@
 <%- include ("../partials/adminHeader") %>
 
-  <div class="container col py-5 mt-5">
-    <div class="d-flex align-items-center justify-content-center">
-      <h1 class="">User details</h1>
-    </div>
-    <table class="table mt-5" id="example" class="table table-striped" style="width:100%">
-      <thead>
-        <tr>
-          <th scope="col">No</th>
-          <th scope="col">Customer Name</th>
-          <th scope="col">email</th>
-          <th scope="col">Phone Number</th>
-          <th scope="col">Controll</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% let count=1 %>
-          <% users.forEach((user)=>{ %>
+<!-- Content wrapper -->
+<div class="content-wrapper">
+  <div class="container-xxl flex-grow-1 container-p-y">
+    <!-- Bootstrap Table with Header - Footer -->
+    <div class="card">
+      <h5 class="card-header">Staff</h5>
+      <div class="table-responsive text-nowrap">
+        <table class="table table-bordered table-warning" id="example">
+          <thead>
+            <tr>
+              <th scope="col">No</th>
+              <th scope="col">Customer Name</th>
+              <th scope="col">email</th>
+              <th scope="col">Phone Number</th>
+              <th scope="col">Controll</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let count=1 %>
+            <% users.forEach((user)=>{ %>
             <tr>
               <td>
                 <%= count %>
@@ -32,96 +35,90 @@
               </td>
               <td>
                 <% if(user.isBlocked===false) { %>
-                  <button type="button" id="<%=user._id%>" class="btn btn-danger" data-bs-toggle="modal"
-                    data-bs-target="#exampleModal-<%=user._id%>">
-                    Block
-                  </button>
-                  <% }else{ %>
-                    <button type="button" id="<%=user._id%>" class="btn btn-primary" data-bs-toggle="modal"
-                      data-bs-target="#exampleModal-<%=user._id%>">
-                      Unblock
-                    </button>
+                <button type="button" id="<%=user._id%>" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal-<%=user._id%>">
+                  Block
+                </button>
+                <% }else{ %>
+                <button type="button" id="<%=user._id%>" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal-<%=user._id%>">
+                  Unblock
+                </button>
+                <%}%>
+                          <!-- Modal -->
+                          <div class="modal fade" id="exampleModal-<%=user._id%>" tabindex="-1"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        Confirmation
+                      </h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <% if(user.isBlocked===false) { %>
+                    <div class="modal-body">
+                      Are you sure you want to Block this user?
+                    </div>
+                    <% }else{ %>
+                    <div class="modal-body">
+                      Are you sure you want to Unblock user?
+                    </div>
                     <%}%>
-                      <!-- Modal -->
-                      <div class="modal fade" id="exampleModal-<%=user._id%>" tabindex="-1"
-                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h1 class="modal-title fs-5" id="exampleModalLabel">
-                                Confirmation
-                              </h1>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                            </div>
-                            <% if(user.isBlocked===false) { %>
-                              <div class="modal-body">
-                                Are you sure you want to Block this user?
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                          Close
+                                        </button>
+                                        <% if(user.isBlocked===false) { %>
+                    <button class="btn btn-success" id="<%=user.name%>" onclick="blockUser('<%=user._id%>','<%=user.name%>')">Block</button>
+                    <% }else{ %>
+                    <button class="btn btn-success" id="<%=user.name%>" onclick="unblockUser('<%=user._id%>','<%=user.name%>')">Unblock</button>
+                    <%}%>
+                                      </div>
                               </div>
-                              <% }else{ %>
-                                <div class="modal-body">
-                                  Are you sure you want to Unblock user?
-                                </div>
-                                <%}%>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                      Close
-                                    </button>
-                                    <% if(user.isBlocked===false) { %>
-                                      <button class="btn btn-success" id="<%=user.name%>"
-                                        onclick="blockUser('<%=user._id%>','<%=user.name%>')">Block</button>
-                                      <% }else{ %>
-                                        <button class="btn btn-success" id="<%=user.name%>"
-                                          onclick="unblockUser('<%=user._id%>','<%=user.name%>')">Unblock</button>
-                                        <%}%>
-                                  </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-              </td>
-            </tr>
-            <% count++ %>
-              <% }) %>
-      </tbody>
-    </table>
+                  </td>
+                </tr>
+                <% count++ %>
+                    <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
-  <script defer src="https://code.jquery.com/jquery-3.5.1.js"></script>
-  <script defer src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
-  <script defer src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap5.min.js"></script>
+  <!-- Bootstrap Table with Header - Footer -->
+</div>
+<!-- Content wrapper -->
 
+<%- include ("../partials/adminFooter") %>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
-  <script>
+<script>
+  $(document).ready(function() {
+    $('#example').DataTable();
+  });
 
-    $(document).ready(function () {
-      $('#example').DataTable();
-    });
-
-    function blockUser(id, name) {
-      var xhr = new XMLHttpRequest();
-      xhr.open("DELETE", "/admin/blockUser/" + id, true);
-      xhr.onreadystatechange = function () {
-        document.getElementById(id).innerHTML = "Unblock";
-        document.getElementById(name).innerHTML = "Unblock";
-        document.getElementById(name).onclick = function () {
-          unblockUser(id, name);
-        };
+  function blockUser(id, name) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("DELETE", "/admin/blockUser/" + id, true);
+    xhr.onreadystatechange = function() {
+      document.getElementById(id).innerHTML = "Unblock";
+      document.getElementById(name).innerHTML = "Unblock";
+      document.getElementById(name).onclick = function() {
+        unblockUser(id, name);
       };
-      xhr.send();
-    }
+    };
+    xhr.send();
+  }
 
-    function unblockUser(id, name) {
-      var xhr = new XMLHttpRequest();
-      xhr.open("PUT", "/admin/unblockUser/" + id, true);
-      xhr.onreadystatechange = function () {
-        document.getElementById(id).innerHTML = "Block";
-        document.getElementById(name).innerHTML = "Block";
-        document.getElementById(name).onclick = function () {
-          blockUser(id, name);
-        };
+  function unblockUser(id, name) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", "/admin/unblockUser/" + id, true);
+    xhr.onreadystatechange = function() {
+      document.getElementById(id).innerHTML = "Block";
+      document.getElementById(name).innerHTML = "Block";
+      document.getElementById(name).onclick = function() {
+        blockUser(id, name);
       };
-      xhr.send();
-    }
-  </script>
+    };
+    xhr.send();
+  }
+</script>

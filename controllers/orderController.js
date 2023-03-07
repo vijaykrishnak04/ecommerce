@@ -6,7 +6,8 @@ const moment = require("moment");
 const mongoose = require("mongoose");
 const promise = require("promise");
 const instance = require("../config/razorpay");
-const crypto = require('crypto')
+const crypto = require('crypto');
+
 
 let countInCart;
 let countInWishlist;
@@ -383,18 +384,16 @@ module.exports = {
   orderSuccess: async (req, res) => {
     try {
       res.render("user/orderSuccess", { countInCart, countInWishlist });
-      const query = req.query;
-      const orderId = query.orderId;
-      await order.updateOne(
-        { _id: orderId },
-        { $set: { orderStatus: "Placed", paymentStatus: "Paid" } }
-      );
-      await cart.deleteOne({ userId: query.cartId });
+      console.log(req.session.user);
+      const userId = await users.findOne({email: req.session.user},{userId:1})
+      const cartId = mongoose.Types.ObjectId(userId)
+      await cart.deleteOne({ userId: cartId });
     } catch (error) {
       console.log(error);
       res.render("user/error");
     }
   },
+  
   orderDetails: async (req, res) => {
     try {
       const session = req.session.user;

@@ -10,6 +10,9 @@ let countInCart;
 let countInWishlist;
 
 module.exports = {
+
+
+
   //add product
 
   addProduct: async (req, res) => {
@@ -55,7 +58,7 @@ module.exports = {
       if (admin) {
         const product = await products.find().populate("category");
         const productCount = await products.find().count()
-        res.render("admin/productDetails", { product,productCount });
+        res.render("admin/productDetails", { product, productCount });
       }
     } catch (error) {
       console.log(error);
@@ -157,6 +160,23 @@ module.exports = {
     } catch (error) {
       console.log(error);
       res.render("user/error");
+    }
+  },
+
+  //search product
+
+  searchProduct: async (req, res, next) => {
+    try {
+      const searchInput = req.body
+      const category = await categories.find();
+      const searchTerm = searchInput.searchInput;
+      const product = await products.find({ name: { $regex: searchTerm, $options: 'i' } });
+      const productCount = product.length
+      res.render('user/shop', { product, category, productCount })
+
+    } catch (err) {
+      console.log(err);
+      next(err)
     }
   },
 

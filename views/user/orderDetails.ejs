@@ -21,12 +21,12 @@
         class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end"
       >
         <div class="col-first">
-          <h1>Confirmation</h1>
+          <h1>Order Details</h1>
           <nav class="d-flex align-items-center">
-            <a href="index.html"
+            <a href="/"
               >Home<span class="lnr lnr-arrow-right"></span
             ></a>
-            <a href="category.html">Confirmation</a>
+            <a href="/orderDetails">Order Details</a>
           </nav>
         </div>
       </div>
@@ -41,12 +41,12 @@
         <div
           class="card"
           style="border-radius: 10px"
-          style="background: #efb83f"
+          style="background: #ffd06a"
         >
           <div class="card-header px-4 py-5" style="background: #efb83f">
             <h5 class="text-muted mb-0">
               Thanks for your Order,
-              <span style="color: #a8729a"><%=productData[0]?.name%></span>!
+              <span style="color: #ffffff"><%=productData[0]?.name%> !</span>
             </h5>
           </div>
           <div
@@ -98,9 +98,9 @@
                     class="col-md-2 text-center d-flex justify-content-center align-items-center"
                   >
                     <p class="text-muted mb-0">
-                      <% if(product.orderStatus=='placed'
-                      ||product.orderStatus=='pending'
-                      ||product.orderStatus=='shipped'||product.orderStatus=='out for Delivery'
+                      <% if(product.orderStatus=='Placed'
+                      ||product.orderStatus=='Pending'
+                      ||product.orderStatus=='Shipped'||product.orderStatus=='Out for delivery'
                       ){ %>
                       <a
                         data-bs-toggle="modal"
@@ -109,7 +109,7 @@
                       >
                         Cancel
                       </a>
-                      <% }else if(product.orderStatus=='delivered'){%>
+                      <% }else if(product.orderStatus=='Delivered'){%>
                       <b>Delivered</b>
                       <% }else {%>
                         <b>Order Cancelled</b>

@@ -1,0 +1,75 @@
+</div>
+<!-- / Layout page -->
+</div>
+
+<!-- Overlay -->
+<div class="layout-overlay layout-menu-toggle"></div>
+</div>
+<!-- / Layout wrapper -->
+
+<!-- Core JS -->
+<!-- build:js assets/vendor/js/core.js -->
+<script src="/../assets/vendor/libs/jquery/jquery.js"></script>
+<script src="/../assets/vendor/libs/popper/popper.js"></script>
+<script src="/../assets/vendor/js/bootstrap.js"></script>
+<script src="/../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+
+<script src="/../assets/vendor/js/menu.js"></script>
+<!-- endbuild -->
+
+<!-- Vendors JS -->
+<script src="/../assets/vendor/libs/apex-charts/apexcharts.js"></script>
+
+<!-- Main JS -->
+<script src="/../assets/js/main.js"></script>
+
+<!-- Page JS -->
+<script src="/../assets/js/dashboards-analytics.js"></script>
+
+<!-- Place this tag in your head or just before your close body tag. -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+
+
+<!-- Analytiscs and charts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+
+<script>
+let pending = document.getElementById("pending").innerHTML;
+let shipped = document.getElementById("shipped").innerHTML;
+let delivered = document.getElementById("delivered").innerHTML;
+let cancelled = document.getElementById("cancelled").innerHTML;
+var myChart5 = new Chart("myChart", {
+type: "bar",
+data: {
+  labels: ["Pending", "Shipped", "Delivered", 'cancelled'],
+  datasets: [{
+    backgroundColor: ["#a3a3a3", "#0B6464", "#264d00", "#5f3307"],
+    data: [pending, shipped, delivered, cancelled],
+  }, ],
+},
+options: {
+  responsive: true,
+}
+});
+let cod = document.getElementById("cod").value;
+let online = document.getElementById("online").value;
+var myChart6 = new Chart('salse-revenue', {
+type: "bar",
+data: {
+  labels: ["COD", "Online"],
+  datasets: [{
+    backgroundColor: ["#C2C9C8", "#515454"],
+    data: [cod, online],
+  }, ],
+},
+options: {
+  responsive: true,
+},
+});
+</script>
+</body>
+
+</html>

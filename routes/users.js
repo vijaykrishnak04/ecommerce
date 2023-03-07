@@ -4,6 +4,7 @@ const productController = require('../controllers/productController')
 const cartController = require('../controllers/cartController')
 const orderController = require('../controllers/orderController')
 const wishlistController = require('../Controllers/wishlistController')
+const contactController = require('../controllers/contactController')
 const router = express() 
 const verifyLogin= require("../middlewares/session");
 
@@ -34,6 +35,14 @@ router.post('/forgotPassword',userController.postForgotPassword);
 router.post('/postForgotOtp',userController.postForgotOtp);
 
 router.post('/postChangePassword',userController.postChangePassword);
+
+//search product
+
+router.post('/searchProduct',productController.searchProduct);
+
+//get contact page
+
+router.get('/contact',contactController.getContact)
 
 //profile management
 

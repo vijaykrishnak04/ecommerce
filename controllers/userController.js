@@ -18,7 +18,7 @@ module.exports = {
 
       const session = req.session.user;
       const product = await products.find({ delete: false }).populate("category");
-      const bannerData = await banner.find().sort({ createdAt: -1 }).limit(1);
+      const bannerData = await banner.find({ isDeleted: false }).sort({ createdAt: -1 }).limit(1);
       const category = await categories.find().limit(4);
       if (session) {
         customer = true;
@@ -242,7 +242,8 @@ module.exports = {
     try {
       const session = req.session.user;
       const userData = await users.findOne({ email: session });
-      res.render("user/profile", { userData });
+      const walletDetails = userData.walletDetails
+      res.render("user/profile", { userData, walletDetails });
     } catch (error) {
       console.log(error);
       res.render("user/error");
@@ -294,9 +295,9 @@ module.exports = {
   addNewAddress: async (req, res) => {
     try {
       const session = req.session.user
-      console.log(req.body);
       const addObj = {
         housename: req.body.housename,
+        phone: req.body.phone,
         area: req.body.area,
         landMark: req.body.landmark,
         district: req.body.district,

@@ -7,9 +7,7 @@ module.exports = {
     try {
       const category = await categories.find();
       const categoryExist = req.session.categoryExist;
-      req.session.categoryExist = "";
       const editCategoryExist = req.session.editCategoryExist;
-      req.session.editCategoryExist = "";
       res.render("admin/category", {
         category,
         categoryExist,

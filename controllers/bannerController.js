@@ -11,7 +11,7 @@ module.exports = {
         offerType: req.body.offerType,
         bannerText: req.body.bannerText,
         couponName: req.body.couponName,
-      }).then((data) => {
+      }).then(() => {
         res.redirect('/admin/getBanner')
       })
     } catch {

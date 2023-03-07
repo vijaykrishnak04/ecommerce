@@ -47,8 +47,6 @@ const adminController = {
       const totalRevenue = orderData.reduce((accumulator, object) => {
         return accumulator + object.totalAmount;
       }, 0);
-      console.log(orderData);
-      console.log(totalRevenue);
       const todayOrder = await order.find({
         orderDate: moment().format("MMM Do YY"),
       });

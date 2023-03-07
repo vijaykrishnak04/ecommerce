@@ -31,52 +31,51 @@
         <section class="ftco-section">
           <form id="placeOrder">
 
-            <div class="container-fluid">
-
-
-              <div class="col-xl-10 ftco-animate fadeInUp ftco-animated">
+            <div class="container">
+              <div class="col-xl-12">
                 <div class="row justify-content-center">
+
                   <div class="container pb-4">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                       Add new address
                     </button>
                   </div>
-                  <h3 class="mb-4 billing-heading">Billing Details</h3>
 
-                  <div>
-                    <div class="form-group">
-                      <label for="country">Select Shipping Address
-                      </label>
-                      <div class="select-wrap">
-
-                        <select required aria-placeholder="select your address" class="form-control form-select mt-2" style="color: #000;" onchange="updateAddressDetails(this.value)">
-                         
-                          <% if (userData.addressDetails &&
-                            userData.addressDetails.length> 0)
-                            { %>
-                          <% for (let i=0; i < userData.addressDetails.length; i++) {
-                              %>
-
-                          <option value="<%= userData.addressDetails[i]._id %>">
-                            <%= userData.addressDetails[i].username %>
-                            <%= userData.addressDetails[i].housename%>
-                          </option>
-
-                          <% } %>
-                          <% } else { %>
-                          <p>No address selected</p>
-                          <% } %>
-                        </select>
+                  <div class="col-md-6 mb-4">
+                    <div class="shipping-section">
+                      <div class="form-group">
+                        <label for="country">Select Shipping Address</label>
+                        <div class="default-select">
+                          <select required aria-placeholder="select your address" class="form-control form-select mt-2" style="color: #000;" onchange="updateAddressDetails(this.value)">
+                            <% if (userData.addressDetails && userData.addressDetails.length> 0) { %>
+                            <% for (let i=0; i < userData.addressDetails.length; i++) { %>
+                            <option value="<%=userData.addressDetails[i]._id%>"><%=userData.addressDetails[i].housename%></option>
+                            <% } %>
+                            <% } else { %>
+                            <p>No address selected</p>
+                            <% } %>
+                          </select>
+                        </div>
                       </div>
                     </div>
                   </div>
+
                   <div class="row align-items-end">
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="firstname">Phone number</label>
+                        <input type="number" name="phone" id="phone" style="font-weight: bold; color: rgb(92, 92, 92) !important;" class="form-control" placeholder="" fdprocessedid="ib393">
+                      </div>
+                    </div>
+
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="firstname">House Name</label>
                         <input type="text" name="housename" id="housename" style="font-weight: bold; color: rgb(92, 92, 92) !important;" class="form-control" placeholder="" fdprocessedid="ib393">
                       </div>
                     </div>
+
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="lastname">Area</label>
@@ -98,20 +97,20 @@
                       </div>
                     </div>
 
-                    <div class="w-100"></div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="towncity">State</label>
-                        <input type="text" id="state" name="state" style="font-weight: bold; color: rgb(92, 92, 92) !important;" class="form-control" placeholder="" fdprocessedid="4iwr3">
+                        <input type="text" id="state" name="state" style="font-weight: bold; color: rgb(92, 92, 92) !important;" class="form-control" placeholder="" fdprocessedid=" 4iwr3">
                       </div>
                     </div>
+
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="postcodezip">Post Office</label>
                         <input type="text" id="postoffice" name="postOffice" style="font-weight: bold; color: rgb(92, 92, 92) !important;" class="form-control" placeholder="" fdprocessedid="y5r53">
                       </div>
                     </div>
-                    <div class="w-100"></div>
+
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="phone">Pincode</label>
@@ -139,8 +138,8 @@
 
 
             <div class="row mt-5 pb-5 d-flex">
-              <div class="col-md-6 d-flex">
-                <div class="cart-detail cart-total bg-light p-3 p-md-4">
+              <div class="col-md-6">
+                <div class="cart-detail cart-total p-3 p-md-4" style="background-color: #ffebbd !important">
                   <h3 class="billing-heading mb-4">Order Summary</h3>
                   <table class="table table-striped">
                     <thead>
@@ -172,7 +171,7 @@
               </div>
 
               <div class="col-md-6">
-                <div class="cart-detail bg-light p-3 p-md-4">
+                <div class="cart-detail p-3 p-md-4" style="background-color: #ffebbd !important">
                   <h3 class="billing-heading mb-4">Payment Method</h3>
                   <div class="form-group">
                     <div class="col-md-12">
@@ -189,9 +188,15 @@
                       </div>
                     </div>
                   </div>
-
-
-                  <button style="border: none;background: none;" type="submit" value="submit"><a style="width: 10rem;height: 2rem;color: #000;" class="buy-now btn btn-sm btn-primary ">Place an Order</a>
+                  <div class="form-group">
+                    <div class="col-md-12">
+                      <div class="radio">
+                        <label><input type="radio" value="Wallet" name="paymentMethod" class="mr-2" checked required>Wallet</label>
+                      </div>
+                    </div>
+                  </div>
+                  <button style="border: none;" class="genric-btn primary circle arrow" type="submit" value="submit">
+                    Place an Order
                   </button>
 
                 </div>
@@ -215,6 +220,10 @@
           <div class="modal-body">
             <form action="/addNewAddress" method="post">
               <div class="modal-body">
+                <div class="mb-1">
+                  <label for="recipient-name" class="col-form-label">Phone:</label>
+                  <input required type="number" class="form-control" id="phone" name="phone" />
+                </div>
                 <div class="mb-1">
                   <label for="recipient-name" class="col-form-label">Housename:</label>
                   <input required type="text" class="form-control" id="housename" name="housename" />
@@ -280,6 +289,7 @@
       const res = await fetch('/getAddressDetails/' + addressId)
       const data = await res.json();
       if (data.message === 'Address not found') {
+        document.querySelector('#phone').value = "";
         document.querySelector('#housename').value = "";
         document.querySelector('#area').value = "";
         document.querySelector('#landmark').value = "";
@@ -288,6 +298,7 @@
         document.querySelector('#postoffice').value = "";
         document.querySelector('#pincode').value = "";
       } else {
+        document.querySelector('#phone').value = data.phone
         document.querySelector('#housename').value = data.housename
         document.querySelector('#area').value = data.area
         document.querySelector('#landmark').value = data.landMark

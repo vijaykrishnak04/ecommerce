@@ -16,7 +16,6 @@ function mailSender(User) {
         <html>
           <head>
             <style>
-              /* Add styles to improve the appearance of the email */
               body {
                 font-family: Arial, sans-serif;
                 background-color: #f6f6f6;

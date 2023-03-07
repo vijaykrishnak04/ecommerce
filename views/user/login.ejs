@@ -1,78 +1,95 @@
-<%- include ("../layout/layout") %>
+<%- include ("../layout/layout2") %>
 
 <body>
-  <div class="limiter">
-    <div class="container-login100">
-      <div class="wrap-login100 row">
-        <div class="col pt-5 mt-4 d-sm-block">
-          <img
-            class="img-fluid w-50"
-            src="/images/Moonji_Logo-16.png"
-            alt="logo"
-          />
-          <hr />
-          <p>Your complete electronics buying solution</p>
+
+  <!-- Start Header Area -->
+  <%- include ("../partials/userHeader") %>
+  <!-- End Header Area -->
+
+  <!-- Start Banner Area -->
+  <!-- <section class="banner-area organic-breadcrumb">
+    <div class="container">
+      <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+        <div class="col-first">
+          <h1>Login/Register</h1>
+          <nav class="d-flex align-items-center">
+            <a href="/">Home<span class="lnr lnr-arrow-right"></span></a>
+            <a href="/login">Login/Register</a>
+          </nav>
         </div>
-        <form class="login100-form validate-form" action="/login" method="post">
-          <span class="login100-form-title"> Login </span>
-
-          <div
-            class="wrap-input100 validate-input"
-            data-validate="Valid email is required: ex@abc.xyz"
-          >
-            <input
-              class="input100"
-              type="text"
-              name="email"
-              placeholder="Email"
-            />
-            <span class="focus-input100"></span>
-            <span class="symbol-input100">
-              <i class="fa fa-envelope" aria-hidden="true"></i>
-            </span>
-          </div>
-
-          <div
-            class="wrap-input100 validate-input"
-            data-validate="Password is required"
-          >
-            <input
-              class="input100"
-              type="password"
-              name="password"
-              placeholder="Password"
-            />
-            <span class="focus-input100"></span>
-            <span class="symbol-input100">
-              <i class="fa fa-lock" aria-hidden="true"></i>
-            </span>
-          </div>
-
-          <% if(locals.invalid){%>
-          <small class="text-danger"><%=invalid%></small>
-          <%}%>
-
-          <div class="container-login100-form-btn">
-            <button class="login100-form-btn" type="submit">Login</button>
-          </div>
-          <a class="ml-2 small text-center" href="/forgotPassword"
-            >Forgot password?</a
-          >
-          <br>
-          <a class="ml-2 small  text-center" href="/signup"
-            >Create new account -></a
-          >
-        </form>
       </div>
     </div>
-  </div>
+  </section> -->
+  <!-- End Banner Area -->
 
-  <!--===============================================================================================-->
-  <script src="/log/vendor/jquery/jquery-3.2.1.min.js"></script>
-  <!--===============================================================================================-->
-  <script src="/log/vendor/bootstrap/js/popper.js"></script>
-  <script src="/log/vendor/bootstrap/js/bootstrap.min.js"></script>
-  <!--===============================================================================================-->
-  <script src="/log/vendor/select2/select2.min.js"></script>
-  <!--===============================================================================================-->
+  <!--================Login Box Area =================-->
+  <section class="login_box_area section_gap mt-lg-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="login_box_img" style="margin: 0;">
+            <img class="img-fluid" src="/UI/img/login.jpg" alt="">
+            <div class="hover">
+              <h4>New to our website?</h4>
+              <p>Your complete electronics buying solution</p>
+              <a class="primary-btn" href="/signup">Create an Account</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="login_form_inner" style="padding-top: 70px; ;">
+            <h3>Log in to enter</h3>
+            <form class="row login_form" action="/login" method="post" id="contactForm" novalidate="validate-input">
+              <div class="col-md-12 form-group">
+                <input type="text" required class="form-control" id="name" name="email" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
+              </div>
+              <div class="col-md-12 form-group">
+                <div class="input-group">
+                  <input type="password" required class="form-control" id="password" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+                  <div class="input-group-append">
+                    <button style="border: none; background: none;" type="button" id="togglePassword">
+                      <i id="eye" class="fa fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12 form-group">
+                <div class="creat_account">
+                  <input type="checkbox" id="f-option2" name="selector">
+                  <label for="f-option2">Keep me logged in</label>
+                </div>
+                <% if(locals.invalid){%>
+                <small class="text-danger"><%=invalid%></small>
+                <%}%>
+              </div>
+              
+              <div class="col-md-12 form-group">
+                <button type="submit" value="submit" class="primary-btn">Log In</button>
+                <a href="/forgotPassword">Forgot Password?</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--================End Login Box Area =================-->
+
+  <!-- start footer Area -->
+  <%- include ("../partials/userFooter") %>
 </body>
+
+<script>
+  const togglePassword = document.querySelector('#togglePassword');
+  const password = document.querySelector('#password');
+  togglePassword.addEventListener('click', function(e) {
+    // toggle the type attribute
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    // toggle the eye slash icon
+    document.getElementById('eye').classList.toggle('fa-eye-slash');
+  });
+</script>
+
+</html>

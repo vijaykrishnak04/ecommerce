@@ -8,9 +8,7 @@
   <!-- Start Banner Area -->
   <section class="banner-area organic-breadcrumb">
     <div class="container">
-      <div
-        class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end"
-      >
+      <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
         <div class="col-first">
           <h1>Shopping Cart</h1>
           <nav class="d-flex align-items-center">
@@ -29,10 +27,7 @@
       <div class="container">
         <% if (locals.countInCart!==0) { %>
         <div class="row mb-5">
-          <div
-            class="site-blocks-table table-responsive-md"
-            style="border: solid; max-width: 45rem"
-          >
+          <div class="site-blocks-table table-responsive-md" style="border: solid; max-width: 45rem; margin-bottom: 2rem;">
             <table class="table">
               <thead style="color: black; background: #f6c344">
                 <tr>
@@ -48,13 +43,7 @@
                 <% productData.forEach((product)=>{%>
                 <tr>
                   <td class="product-thumbnail">
-                    <a href="/productView/<%= product?.productDetail?._id %>"
-                      ><img
-                        style="width: 100px"
-                        src="<%= product.productDetail.image[0].path %>"
-                        alt="Image"
-                        class="img-fluid"
-                    /></a>
+                    <a href="/productView/<%= product?.productDetail?._id %>"><img style="width: 100px" src="<%= product.productDetail.image[0].path %>" alt="Image" class="img-fluid" /></a>
                   </td>
                   <td class="product-name">
                     <h2 class="h5 text-black">
@@ -64,30 +53,13 @@
                   <td><%= product.productDetail.price%> ₹</td>
                   <td class="product-quantity">
                     <div class="input-group" style="max-width: 120px">
-                      <button
-                        class="btn btn-outline-warning js-btn-minus"
-                        onclick="changeQuantity('<%= product._id %>','<%= product.productDetail._id %>',-1)"
-                        type="button"
-                      >
+                      <button class="btn btn-outline-warning js-btn-minus" onclick="changeQuantity('<%= product._id %>','<%= product.productDetail._id %>',-1)" type="button">
                         &minus;
                       </button>
 
-                      <input
-                        id="<%= product.productDetail._id %>"
-                        type="text"
-                        class="form-control text-center"
-                        min="0"
-                        name="quantity"
-                        value="<%= product.productQuantity%>"
-                        aria-label="Example text with button addon"
-                        aria-describedby="button-addon1"
-                      />
+                      <input readonly id="<%= product.productDetail._id %>" type="text" class="form-control text-center" min="0" name="quantity" value="<%= product.productQuantity%>" aria-label="Example text with button addon" aria-describedby="button-addon1" />
 
-                      <button
-                        class="btn btn-outline-warning js-btn-plus"
-                        onclick="changeQuantity('<%= product._id %>','<%= product.productDetail._id %>',1)"
-                        type="button"
-                      >
+                      <button class="btn btn-outline-warning js-btn-plus" onclick="changeQuantity('<%= product._id %>','<%= product.productDetail._id %>',1)" type="button">
                         &plus;
                       </button>
                     </div>
@@ -97,10 +69,7 @@
 
                   <td><%=c %> ₹</td>
                   <td class="product-remove">
-                    <button
-                      class="btn btn-danger"
-                      onclick="removeProduct('<%= product._id %>','<%= product.productDetail._id %>')"
-                    >
+                    <button class="genric-btn danger circle arrow" onclick="removeProduct('<%= product._id %>','<%= product.productDetail._id %>')">
                       Remove
                     </button>
                   </td>
@@ -138,9 +107,7 @@
                   <div class="col-md-6 text-right">
                     <% if(locals.sum<1000) {%>
                     <strong class="text-black">40 ₹</strong>
-                    <small class="text-danger"
-                      >shop for 1000 or more to get free delivery</small
-                    >
+                    <small class="text-danger">shop for 1000 or more to get free delivery</small>
                     <% } else { %>
                     <strong class="text-black">0₹(free delivery)</strong>
                     <%}%>
@@ -162,47 +129,34 @@
                   </div>
                 </div>
 
-                <div class="row">
+                <div class="row justify-content-center">
                   <div class="col-md-12">
-                    <button
-                      class="btn btn-warning btn-lg py-3 btn-block"
-                      onclick="window.location='/checkout'"
-                    >
-                      Proceed To Checkout
-                    </button>
+                    <a class="primary-btn" href="/checkout">Proceed to checkout</a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <% } %>
-        </div>
-        <% } else { %>
+                  </div>
+                  <% } else { %>
 
-        <div class="p-3 m-3">
-          <img
-            src="/images/emptyCart.png"
-            style="width: 40%; height: 40%"
-            class="img-fluid rounded mx-auto d-block mb-5"
-            alt="image"
-          />
-          <h2 class="text-center text-primary">Oops!</h2>
-          <h3 class="text-center text-primary">Your Cart is empty</h3>
-        </div>
-        <% } %>
-        <div class="order_details section_gap">
-          <div class="container">
-            <div class="d-flex justify-content-center">
-              <a href="/shop"
-                ><button class="btn btn-outline-warning btn-sm btn-block">
-                  Continue Shopping
-                </button></a
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                  <div class="p-3 m-3">
+                    <img src="/images/emptyCart.png" style="width: 40%; height: 40%" class="img-fluid rounded mx-auto d-block mb-5" alt="image" />
+                    <h2 class="text-center text-primary">Oops!</h2>
+                    <h3 class="text-center text-primary">Your Cart is empty</h3>
+                  </div>
+                  <% } %>
+                  <div class="order_details">
+                    <div class="container">
+                      <div class="d-flex justify-content-center">
+                        <button onclick="window.history.back()" class="btn btn-danger mr-3 mt-2 px-4">Go Back</button>
+                        <a href="/shop"><button type="submit" class="btn btn-outline-warning mt-2 px-4">Continue shoping</button></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
   </section>
   <!--================End Cart Area =================-->
 

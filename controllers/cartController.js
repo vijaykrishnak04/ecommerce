@@ -120,66 +120,10 @@ module.exports = {
     }
   },
 
-  // totalAmount: async (req, res) => {
-  //   try {
-
-  //     let session = req.session.user;
-  //     const userData = await users.findOne({ email: session });
-  //     const productData = await cart.aggregate([
-  //       {
-  //         $match: { userId: userData._id },
-  //       },
-  //       {
-  //         $unwind: "$product",
-  //       },
-  //       {
-  //         $project: {
-  //           productItem: "$product.productId",
-  //           productQuantity: "$product.quantity",
-  //         },
-  //       },
-  //       {
-  //         $lookup: {
-  //           from: "products",
-  //           localField: "productItem",
-  //           foreignField: "_id",
-  //           as: "productDetail",
-  //         },
-  //       },
-  //       {
-  //         $project: {
-  //           productItem: 1,
-  //           productQuantity: 1,
-  //           productDetail: { $arrayElemAt: ["$productDetail", 0] },
-  //         },
-  //       },
-  //       {
-  //         $addFields: {
-  //           productPrice: {
-  //             $multiply: ["$productQuantity", "$productDetail.price"],
-  //           },
-  //         },
-  //       },
-  //       {
-  //         $group: {
-  //           _id: userData.id,
-  //           total: {
-  //             $sum: { $multiply: ["$productQuantity", "$productDetail.price"] },
-  //           },
-  //         },
-  //       },
-  //     ]).exec();
-  //     res.json({ status: true, productData });
-  //   } catch (err) {
-  //     console.log(err);
-  //     next(err)
-  //   }
-  // },
 
   changeQuantity: (req, res, next) => {
     try {
       const data = req.body
-      console.log(data, "counted");
       const objId = mongoose.Types.ObjectId(data.product)
 
       if (data.count == -1 && data.quantity == 1) {
@@ -240,7 +184,6 @@ module.exports = {
               },
             },
           ]).exec();
-          console.log(productData);
           res.json({ success: true, productData: productData })
         })
       }
@@ -270,7 +213,7 @@ module.exports = {
         });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 }

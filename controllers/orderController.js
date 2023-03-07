@@ -1,6 +1,5 @@
 const cart = require("../model/cartSchema");
 const users = require("../model/userSchema");
-const products = require("../model/productSchema");
 const order = require("../model/orderSchema");
 const coupon = require("../model/couponSchema");
 const moment = require("moment");
@@ -97,7 +96,6 @@ module.exports = {
       const addressId = req.params.userId
       const session = req.session.user
       const userData = await users.findOne({ email: session })
-      console.log(userData, 2);
       const addressDetails = userData.addressDetails.id(addressId);
       if (!addressDetails) {
         return res.status(404).json({ message: 'Address not found' })
@@ -191,10 +189,10 @@ module.exports = {
                 total = sum - dis;
               }
             }
-            const orderData = await order.create({
+            const orderData = new order({
               userId: userData._id,
               name: userData.name,
-              phoneNumber: userData.phonenumber,
+              phone: req.body.phone,
               houseName: req.body.housename,
               area: req.body.area,
               landMark: req.body.landMark,
@@ -209,28 +207,69 @@ module.exports = {
               deliveryDate: moment().add(3, "days").format("MMM Do YY")
             })
 
-            const amount = orderData.totalAmount * 100
-            const orderId = orderData._id
-            console.log(orderId + "hey this is my order id");
-
 
 
             if (req.body.paymentMethod === "COD") {
 
-              await order.updateOne({ _id: orderId }, { $set: { orderStatus: 'placed' } })
+              const orderDatas = await orderData.save()
+              const orderId = orderDatas._id
 
-              await cart.findOneAndDelete({ userId: userData._id });
+              await order.updateOne({ _id: orderId }, { $set: { orderStatus: 'Placed' } }).then(() => {
 
-              res.json({ success: true });
+                res.json({ success: true });
 
-              coupon.updateOne(
-                { couponName: data.coupon },
-                { $push: { users: { userId: objId } } }
-              ).then((updated) => {
-                console.log(updated + "hey this process modified");
-              });
+                coupon.updateOne(
+                  { couponName: data.coupon },
+                  { $push: { users: { userId: objId } } }
+                )
+                
+              })
+
+            } else if (req.body.paymentMethod === "Wallet") {
+
+              if (userData.walletTotal < orderData.totalAmount) {
+
+                res.json({ wallet: true })
+
+              } else {
+
+                const orderDatas = await orderData.save()
+                const orderId = orderDatas._id
+
+                order.updateOne({ _id: orderId }, { $set: { paymentStatus: "Paid", orderStatus: 'Placed' } }).then(async () => {
+
+                  const updatedWalletTotal = userData.walletTotal - orderDatas.totalAmount;
+                  const updatedWalletDetails = userData.walletDetails.concat({
+                    transactionType: 'Purchase',
+                    amount: orderDatas.totalAmount,
+                    orderDetails: orderData._id,
+                    date: new Date()
+                  });
+
+                  await users.updateOne(
+                    { _id: userData._id },
+                    { $set: { walletTotal: updatedWalletTotal, walletDetails: updatedWalletDetails } }
+                  );
+
+                  res.json({ success: true });
+                  coupon.updateOne(
+                    { couponName: data.coupon },
+                    { $push: { users: { userId: objId } } }
+                  )
+
+                }).catch((err) => {
+                  console.log(err);
+                  res.json({ status: false, err_message: "Payment failed" });
+                  order.deleteOne({ _id: orderId })
+                })
+
+              }
 
             } else {
+
+              const orderDatas = await orderData.save()
+              const orderId = orderDatas._id
+              const amount = orderDatas.totalAmount * 100
 
               let options = {
                 amount: amount,
@@ -238,12 +277,10 @@ module.exports = {
                 receipt: "" + orderId,
               };
               instance.orders.create(options, function (err, order) {
-
                 if (err) {
                   console.log(err);
                 } else {
                   res.json({ order: order });
-                  cart.findOneAndDelete({ userId: userData._id });
                   coupon.updateOne(
                     { couponName: data.coupon },
                     { $push: { users: { userId: objId } } }
@@ -280,18 +317,20 @@ module.exports = {
 
         const objId = mongoose.Types.ObjectId(receipt);
 
-        order.updateOne({ _id: objId }, { $set: { paymentStatus: "paid", orderStatus: 'placed' } }).then(() => {
+        order.updateOne({ _id: objId }, { $set: { paymentStatus: "Paid", orderStatus: 'Placed' } }).then(() => {
 
           res.json({ success: true });
 
         }).catch((err) => {
           console.log(err);
           res.json({ status: false, err_message: "payment failed" });
+          order.deleteOne({ _id: objId })
         })
 
       } else {
         console.log(err);
         res.json({ status: false, err_message: "payment failed" });
+        order.deleteOne({ _id: objId })
       }
 
 
@@ -308,7 +347,7 @@ module.exports = {
       const orderId = query.orderId;
       await order.updateOne(
         { _id: orderId },
-        { $set: { orderStatus: "placed", paymentStatus: "paid" } }
+        { $set: { orderStatus: "Placed", paymentStatus: "Paid" } }
       );
       await cart.deleteOne({ userId: query.cartId });
     } catch (error) {
@@ -322,7 +361,6 @@ module.exports = {
       const userData = await users.findOne({ email: session });
       const userId = userData._id;
       const objId = mongoose.Types.ObjectId(userId);
-      console.log(objId);
       const productData = await order
         .aggregate([
           {
@@ -388,7 +426,6 @@ module.exports = {
       const orderDetails = await order
         .find({ userId: userData._id })
         .sort({ createdAt: -1 });
-      console.log(productData.length);
       res.render("user/orderDetails", {
         productData,
         orderDetails,
@@ -469,19 +506,6 @@ module.exports = {
       res.render("user/error");
     }
   },
-  cancelOrder: async (req, res) => {
-    try {
-      const data = req.params.id;
-      await order.updateOne(
-        { _id: data },
-        { $set: { orderStatus: "cancelled" } }
-      );
-      res.redirect("/orderDetails");
-    } catch (error) {
-      console.log(error);
-      res.render("user/error");
-    }
-  },
 
   getOrders: async (req, res) => {
     try {
@@ -523,6 +547,10 @@ module.exports = {
       const id = req.params.id;
 
       const objId = mongoose.Types.ObjectId(id);
+
+      const orderDetails = await order.find({ _id: objId })
+      console.log(orderDetails);
+
       const productData = await order.aggregate([
         {
           $match: { _id: objId },
@@ -571,25 +599,39 @@ module.exports = {
           $unwind: "$category_name",
         },
       ]);
-      res.render("admin/orderedProduct", { productData });
+      res.render("admin/orderedProduct", { productData, orderDetails });
     } catch (error) {
       console.log(error);
       res.render("user/error");
     }
   },
 
-  cancelOrder: async (req, res) => {
+  cancelOrder: async (req, res, next) => {
     try {
       const data = req.params.id;
-      await order.updateOne(
-        { _id: data },
-        { $set: { orderStatus: "cancelled" } }
+      const orderData = await order.findOne({ _id: data })
+      const refundAmount = orderData.totalAmount
+      const userData = await users.findOne({ _id: orderData.userId });
+
+
+      const updatedWalletTotal = userData.walletTotal + refundAmount;
+      const updatedWalletDetails = userData.walletDetails.concat({
+        transactionType: 'refund',
+        amount: refundAmount,
+        orderDetails: orderData._id,
+        date: new Date()
+      });
+
+      await users.updateOne(
+        { _id: orderData.userId },
+        { $set: { walletTotal: updatedWalletTotal, walletDetails: updatedWalletDetails } }
       );
+      await order.updateOne({ _id: data }, { $set: { orderStatus: "cancelled" } })
       res.redirect("/orderDetails");
-    } catch (error) {
-      console.log(error);
-      res.render("user/error");
+    } catch (err) {
+      next(err)
     }
+
   },
 
   orderStatusChanging: async (req, res) => {

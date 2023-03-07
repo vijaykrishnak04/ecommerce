@@ -12,42 +12,37 @@ const orderSchema = new Schema(
             type: String,
             required: true
         },
+        phone: {
+            type: Number,
+            required: true
+        },
         houseName: {
             type: String,
-
+            required: true
         },
-
         area: {
             type: String,
-
-
+            required: true
         },
-
         landMark: {
             type: String,
-
-
+            required: true
         },
         district: {
             type: String,
-
-
+            required: true
         },
         state: {
             type: String,
-
-
+            required: true
         },
-
         postOffice: {
             type: String,
-
-
+            required: true
         },
         pin: {
             type: Number,
-
-
+            required: true
         },
         orderItems: [
             {
@@ -67,7 +62,7 @@ const orderSchema = new Schema(
         },
         orderStatus: {
             type: String,
-            default: "pending"
+            default: "Pending"
         },
         paymentMethod:
         {
@@ -76,7 +71,7 @@ const orderSchema = new Schema(
         },
         paymentStatus: {
             type: String,
-            default: "not paid"
+            default: "Not paid"
         },
         orderDate: {
             type: String,

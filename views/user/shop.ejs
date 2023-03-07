@@ -11,11 +11,10 @@
     <div class="container">
       <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
         <div class="col-first">
-          <h1>Shop Category page</h1>
+          <h1>Shop</h1>
           <nav class="d-flex align-items-center">
             <a href="/">Home<span class="lnr lnr-arrow-right"></span></a>
             <a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
-            <a href="category.html">Fashon Category</a>
           </nav>
         </div>
       </div>
@@ -23,12 +22,15 @@
   </section>
   <!-- End Banner Area -->
   <div class="container">
+    <div class="d-flex justify-content-center">
+      <p><span class="number">RESULTS : <%=productCount%></span></p>
+    </div>
     <div class="row">
       <div class="col-xl-3 col-lg-4 col-md-5">
         <div class="sidebar-categories">
           <div class="head">Browse Categories</div>
           <ul class="main-categories">
-            <li class="main-nav-list"><a href="/shop"><span class="lnr lnr-arrow-right"></span>All<span class="number"><%=productCount%></span></a>
+            <li class="main-nav-list"><a href="/shop"><span class="lnr lnr-arrow-right"></span>All</a>
             </li>
             <% category.forEach((categories)=>{ %>
             <li class="main-nav-list">
@@ -105,7 +107,7 @@
             <% product.forEach((products)=>{ %>
             <div class="col-lg-4 col-md-6">
               <div class="single-product">
-				<a  href="/productView/<%=products._id%>"><img class="img-fluid" style="width:300px; height:225px" src="/<%= products.image[0].path %>" alt=""></a>
+                <a href="/productView/<%=products._id%>"><img class="img-fluid" style="width:300px; height:225px" src="/<%= products.image[0].path %>" alt=""></a>
                 <div class="product-details">
                   <h6>
                     <%= products.name %>

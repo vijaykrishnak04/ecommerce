@@ -9,7 +9,7 @@ const nocache = require("nocache");
 
 const adminRouter = require("./routes/admin");
 const usersRouter = require("./routes/users");
-const staffRouter = require("./routes/admin");
+
 
 const db = require("./config/connections");
 
@@ -48,7 +48,7 @@ app.use(nocache());
 
 app.use("/admin", adminRouter);
 app.use("/", usersRouter);
-app.use("/staff", staffRouter)
+
 //server listening
 
 app.listen(3000, () => {

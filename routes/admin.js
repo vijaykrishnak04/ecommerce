@@ -8,6 +8,7 @@ const verifylogin     = require('../middlewares/session');
 const upload = require('../config/multer')
 const orderController = require('../controllers/orderController')
 const bannerController = require('../controllers/bannerController')
+const staffController = require('../controllers/staffController')
 
 //get admin pages
 
@@ -21,11 +22,15 @@ adminRouter.get('/adminLogout',verifylogin.verifyLoginAdmin,adminController.admi
 
 //user management
 
-adminRouter.get('/userDetails',verifylogin.verifyLoginAdmin,adminController.getAllUsers)
+adminRouter.get('/addstaff',verifylogin.verifyLoginAdmin,staffController.addStaff)
 
-adminRouter.delete('/blockUser/:id',verifylogin.verifyLoginAdmin,adminController.blockUser)
+adminRouter.post('/postAddStaff',verifylogin.verifyLoginAdmin,staffController.postAddStaff)
 
-adminRouter.put('/unblockUser/:id',verifylogin.verifyLoginAdmin,adminController.unblockUser)
+adminRouter.get('/staffDetails',verifylogin.verifyLoginAdmin,staffController.getAllStaff)
+
+adminRouter.delete('/blockUser/:id',verifylogin.verifyLoginAdmin,staffController.blockStaff)
+
+adminRouter.put('/unblockUser/:id',verifylogin.verifyLoginAdmin,staffController.unblockStaff)
 
 //product management
 

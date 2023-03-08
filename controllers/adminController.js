@@ -1,4 +1,5 @@
-const user = require('../model/userSchema');
+const staff = require('../model/staffSchema');
+const user = require('../model/userSchema')
 const order = require('../model/orderSchema')
 const products = require('../model/productSchema')
 const moment = require("moment");
@@ -18,7 +19,7 @@ const adminController = {
       }
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -35,13 +36,13 @@ const adminController = {
       }
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
   //admin home
 
-  getAdminHome:async (req, res) => {
+  getAdminHome: async (req, res) => {
     try {
       const orderData = await order.find({ orderStatus: { $ne: "cancelled" } });
       const totalRevenue = orderData.reduce((accumulator, object) => {
@@ -71,7 +72,7 @@ const adminController = {
       res.render('admin/home', { cod, online, pending, shipped, delivered, cancelled, totalRevenue, allOrders, activeUsers, product, monthlyRevenue, todayRevenue });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -83,51 +84,7 @@ const adminController = {
       res.redirect("/admin");
     } catch (error) {
       console.log(error);
-      res.render("user/error");
-    }
-  },
-
-  //get all users
-
-  getAllUsers: async (req, res) => {
-    try {
-      const users = await user.find();
-      res.render("admin/userDetails", { users });
-    } catch (error) {
-      console.log(error);
-      res.render("user/error");
-    }
-  },
-
-  //block user
-
-  blockUser: async (req, res) => {
-    try {
-      const id = req.params.id;
-      await user
-        .updateOne({ _id: id }, { $set: { isBlocked: true } })
-        .then(() => {
-          res.redirect("/admin/userDetails");
-        });
-    } catch (error) {
-      console.log(error);
-      res.render("user/error");
-    }
-  },
-
-  //unblock user
-
-  unblockUser: async (req, res) => {
-    try {
-      const id = req.params.id;
-      await user
-        .updateOne({ _id: id }, { $set: { isBlocked: false } })
-        .then(() => {
-          res.redirect("/admin/userDetails");
-        });
-    } catch (error) {
-      console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 

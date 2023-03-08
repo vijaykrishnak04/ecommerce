@@ -88,7 +88,7 @@ module.exports = {
       res.render("user/checkout", { productData, sum, userData });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -338,7 +338,7 @@ module.exports = {
       }
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -349,14 +349,13 @@ module.exports = {
       const paymentId = details['payment[razorpay_payment_id]'];
       const razorpay_signature = details['payment[razorpay_signature]'];
       const receipt = details['order[receipt]'];
+      const objId = mongoose.Types.ObjectId(receipt);
 
       let hmac = crypto.createHmac("SHA256", process.env.KETSECRET);
       hmac.update(orderId + "|" + paymentId);
       hmac = hmac.digest("hex");
 
       if (hmac == razorpay_signature) {
-
-        const objId = mongoose.Types.ObjectId(receipt);
 
         order.updateOne({ _id: objId }, { $set: { paymentStatus: "Paid", orderStatus: 'Placed' } }).then(() => {
 
@@ -365,19 +364,21 @@ module.exports = {
         }).catch((err) => {
           console.log(err);
           res.json({ status: false, err_message: "payment failed" });
-          order.deleteOne({ _id: objId })
+          order.findByIdAndDelete({ _id: objId })
         })
 
       } else {
+
         console.log(err);
         res.json({ status: false, err_message: "payment failed" });
-        order.deleteOne({ _id: objId })
+        order.findByIdAndDelete({ _id: objId })
+
       }
 
 
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -385,15 +386,15 @@ module.exports = {
     try {
       res.render("user/orderSuccess", { countInCart, countInWishlist });
       console.log(req.session.user);
-      const userId = await users.findOne({email: req.session.user},{userId:1})
+      const userId = await users.findOne({ email: req.session.user }, { userId: 1 })
       const cartId = mongoose.Types.ObjectId(userId)
       await cart.deleteOne({ userId: cartId });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
-  
+
   orderDetails: async (req, res) => {
     try {
       const session = req.session.user;
@@ -473,7 +474,7 @@ module.exports = {
       });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -542,7 +543,7 @@ module.exports = {
       });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -577,7 +578,7 @@ module.exports = {
         });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -641,7 +642,7 @@ module.exports = {
       res.render("admin/orderedProduct", { productData, orderDetails });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -692,7 +693,7 @@ module.exports = {
       res.redirect("/admin/order");
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 };

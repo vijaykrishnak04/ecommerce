@@ -14,9 +14,9 @@ module.exports = {
       }).then(() => {
         res.redirect('/admin/getBanner')
       })
-    } catch {
-      console.error();
-      res.render('user/error');
+    } catch(error) {
+      console.log(error);
+      next(error)
     }
 
   },
@@ -34,9 +34,9 @@ module.exports = {
       ).then(() => {
         res.redirect('/admin/getBanner');
       })
-    } catch {
-      console.error()
-      res.render("user/error")
+    } catch(error){
+      console.log(error);
+      next(error)
     }
   },
   deleteBanner: async (req, res) => {
@@ -49,8 +49,8 @@ module.exports = {
         res.redirect('/admin/getBanner');
       })
     } catch {
-      console.error();
-      res.render("user/error");
+      console.log(error);
+      next(error)
     }
   },
   restoreBanner: async (req, res) => {
@@ -62,9 +62,9 @@ module.exports = {
       ).then(() => {
         res.redirect('/admin/getBanner');
       })
-    } catch {
-      console.error()
-      res.redirect("/admin/getBanner");
+    } catch(error) {
+      console.log(error);
+      next(error)
     }
   },
 }

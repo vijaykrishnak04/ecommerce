@@ -9,7 +9,7 @@
       <div class="card mb-4">
         <h5 class="card-header">Add Banner</h5>
 
-        <form class="mt-3 mb-3" action="/admin/addBanner" method="post" onsubmit="return validateBanner()">
+        <form class="mt-3 mb-3" action="/admin/addCarousal" method="post" enctype="multipart/form-data" onsubmit="return validateBanner()">
           <div class="card-body demo-vertical-spacing demo-only-element">
             <div class="input-group">
               <span class="input-group-text">Offer Type</span>
@@ -28,6 +28,12 @@
               <input class="form-control" name="couponName" id="couponName" required type="text" />
               <small id="couponNameError" class="text-danger err"></small>
             </div>
+
+            <div class="input-group">
+                <span class="input-group-text">Carousal image</span>
+                <input class="form-control" required id="fileInput" accept="image/png, image/jpeg, image/jpg" type="file" name="bannerImage" id="product_image" multiple />
+                <div id="previews"></div>
+              </div>
 
             <button class="btn btn-success mt-4" type="submit">
               Submit
@@ -72,7 +78,7 @@
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
-                      <form action="/admin/editbanner/<%= element._id %>" method="post" onsubmit="return validateEditBanner()">
+                      <form action="/admin/editCarousal/<%= element._id %>" method="post" onsubmit="return validateEditBanner()">
                         <div class="modal-body">
                           <div class="d-flex justify-content-between">
                             <div class="d-flex flex-column">
@@ -153,11 +159,11 @@
                                     Close
                                   </button>
                                   <% if(element.isDeleted===false) { %>
-                    <a href="/admin/deleteBanner/<%=element._id%>"><button type="button" class="btn btn-danger">
+                    <a href="/admin/deleteCarousal/<%=element._id%>"><button type="button" class="btn btn-danger">
                         Delete
                       </button></a>
                     <% }else{ %>
-                    <a href="/admin/restoreBanner/<%=element._id%>"><button type="button" class="btn btn-primary">
+                    <a href="/admin/restoreCarousal/<%=element._id%>"><button type="button" class="btn btn-primary">
                         Restore
                       </button></a>
                     <%}%>

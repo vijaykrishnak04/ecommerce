@@ -7,8 +7,10 @@ var logger = require("morgan");
 const session = require("express-session");
 const nocache = require("nocache");
 
-var adminRouter = require("./routes/admin");
-var usersRouter = require("./routes/users");
+const adminRouter = require("./routes/admin");
+const usersRouter = require("./routes/users");
+const staffRouter = require("./routes/admin");
+
 const db = require("./config/connections");
 
 var app = express();
@@ -46,7 +48,7 @@ app.use(nocache());
 
 app.use("/admin", adminRouter);
 app.use("/", usersRouter);
-
+app.use("/staff", staffRouter)
 //server listening
 
 app.listen(3000, () => {

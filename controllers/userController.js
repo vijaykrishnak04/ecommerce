@@ -7,6 +7,7 @@ const mailSender = require("../config/mailSender");
 const products = require("../model/productSchema");
 const cart = require("../model/cartSchema");
 const banner = require('../model/bannerSchema')
+const carousal = require('../model/carousalSchema')
 const categories = require("../model/categorySchema");
 
 let countInCart = 0;
@@ -19,16 +20,18 @@ module.exports = {
       const session = req.session.user;
       const product = await products.find({ delete: false }).populate("category");
       const bannerData = await banner.find({ isDeleted: false }).sort({ createdAt: -1 }).limit(1);
+      const carousalData = await carousal.find({ isDeleted: false }).sort({ createdAt: -1 });
+      console.log(carousalData);
       const category = await categories.find().limit(4);
       if (session) {
         customer = true;
       } else {
         customer = false;
       }
-      res.render("user/home", { customer, product, bannerData, category });
-    } catch {
-      console.error();
-      res.render("user/error");
+      res.render("user/home", { customer, product, bannerData, category, carousalData });
+    } catch(error) {
+      console.log(error);
+      next(error)
     }
   },
   //to render the login page

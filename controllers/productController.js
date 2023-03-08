@@ -56,9 +56,23 @@ module.exports = {
     try {
       const admin = req.session.admin;
       if (admin) {
-        const product = await products.find().populate("category");
+        const product = await products.find({delete:false}).populate("category");
         const productCount = await products.find().count()
         res.render("admin/productDetails", { product, productCount });
+      }
+    } catch (error) {
+      console.log(error);
+      res.render("user/error");
+    }
+  },
+
+  deletedProducts: async (req, res) => {
+    try {
+      const admin = req.session.admin;
+      if (admin) {
+        const product = await products.find({delete:true}).populate("category");
+        const productCount = await products.find().count()
+        res.render("admin/deletedProducts", { product, productCount });
       }
     } catch (error) {
       console.log(error);

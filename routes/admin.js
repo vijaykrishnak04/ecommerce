@@ -8,6 +8,7 @@ const verifylogin     = require('../middlewares/session');
 const upload = require('../config/multer')
 const orderController = require('../controllers/orderController')
 const bannerController = require('../controllers/bannerController')
+const carousalController = require('../controllers/carousalController')
 const staffController = require('../controllers/staffController')
 
 //get admin pages
@@ -39,6 +40,8 @@ adminRouter.get('/addProduct',verifylogin.verifyLoginAdmin,productController.add
 adminRouter.post('/postProduct',verifylogin.verifyLoginAdmin,upload.array('image',3),productController.postProduct)
 
 adminRouter.get('/productDetails',verifylogin.verifyLoginAdmin,productController.productDetails)
+
+adminRouter.get('/deletedProduct',verifylogin.verifyLoginAdmin,productController.deletedProducts)
 
 adminRouter.get('/editProduct/:id',verifylogin.verifyLoginAdmin,productController.editProduct)
 
@@ -84,7 +87,19 @@ adminRouter.get('/orderedProduct/:id',verifylogin.verifyLoginAdmin,orderControll
 
 adminRouter.post('/orderStatuschange/:id',orderController.orderStatusChanging)
 
-//banner management
+//carousal banner management
+
+adminRouter.get('/getCarousal',verifylogin.verifyLoginAdmin,carousalController.getBannerPage);
+
+adminRouter.post('/addCarousal',verifylogin.verifyLoginAdmin,upload.single('bannerImage'),carousalController.addBanner);
+
+adminRouter.post('/editCarousal/:id',verifylogin.verifyLoginAdmin,carousalController.editBanner);
+
+adminRouter.get('/deleteCarousal/:id',verifylogin.verifyLoginAdmin,carousalController.deleteBanner);
+
+adminRouter.get('/restoreCarousal/:id',verifylogin.verifyLoginAdmin,carousalController.restoreBanner);
+
+//Ad banner management
 
 adminRouter.get('/getBanner',verifylogin.verifyLoginAdmin,bannerController.getBannerPage)
 

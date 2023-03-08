@@ -8,7 +8,7 @@ module.exports = {
             res.render('admin/coupon', { couponData, couponCount });
         } catch (error) {
             console.log(error);
-            res.render("user/error");
+            next(error)
         }
     },
 
@@ -27,9 +27,9 @@ module.exports = {
                 // console.log(data);
                 res.redirect("/admin/coupon")
             });
-        } catch {
-            console.error();
-            res.render("user/error")
+        } catch (error) {
+            console.log(error);
+            next(error)
         }
     },
 
@@ -40,7 +40,7 @@ module.exports = {
             res.redirect('/admin/coupon');
         } catch (error) {
             console.log(error);
-            res.render("user/error");
+            next(error)
         }
     },
 
@@ -51,7 +51,7 @@ module.exports = {
             res.redirect("/admin/coupon");
         } catch (error) {
             console.log(error);
-            res.render("user/error");
+            next(error)
         }
     },
 
@@ -62,7 +62,7 @@ module.exports = {
             res.redirect("/admin/coupon");
         } catch (error) {
             console.log(error);
-            res.render("user/error");
+            next(error)
         }
     },
 
@@ -81,8 +81,9 @@ module.exports = {
             ).then(() => {
                 res.redirect("/admin/coupon");
             })
-        } catch {
-            console.error();
+        } catch (error) {
+            console.log(error);
+            next(error)
         }
     },
 }

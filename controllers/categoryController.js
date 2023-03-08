@@ -15,7 +15,7 @@ module.exports = {
       });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
   addCategory: async (req, res) => {
@@ -39,7 +39,7 @@ module.exports = {
       }
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
   editCategory: async (req, res) => {
@@ -67,7 +67,7 @@ module.exports = {
       }
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
   deleteCategory: async (req, res) => {
@@ -77,7 +77,7 @@ module.exports = {
       res.redirect("/admin/category");
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
   restoreCategory: async (req, res) => {
@@ -87,7 +87,7 @@ module.exports = {
       res.redirect("/admin/category");
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 }

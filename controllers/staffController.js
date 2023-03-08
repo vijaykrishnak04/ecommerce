@@ -13,6 +13,7 @@ module.exports = {
             next(err)
         }
     },
+
     //get all staff
 
     getAllStaff: async (req, res) => {

@@ -62,7 +62,6 @@ module.exports = {
       });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
     }
   },
 
@@ -116,7 +115,7 @@ module.exports = {
       }
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 

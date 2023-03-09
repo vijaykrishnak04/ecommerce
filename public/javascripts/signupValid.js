@@ -60,10 +60,7 @@ form.addEventListener('submit', (e) => {
     if (confirmPasswordValue !== passwordValue) {
         setError(confirmPassword, 'Password do not match', 'confirmPasswordError')
         flag = 1
-    } else {
-        setSuccess(confirmPassword, 'confirmPasswordError')
-        flag = 0
-    }
+    } 
     if (flag === 1) {
         e.preventDefault();
         return 0;

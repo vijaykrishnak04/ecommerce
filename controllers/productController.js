@@ -21,7 +21,7 @@ module.exports = {
       res.render("admin/addProduct", { category: category });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -48,7 +48,7 @@ module.exports = {
         });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -62,7 +62,7 @@ module.exports = {
       }
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -76,7 +76,7 @@ module.exports = {
       }
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -90,7 +90,7 @@ module.exports = {
       res.render("admin/editProduct", { productData, category });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -112,7 +112,7 @@ module.exports = {
       res.redirect("/admin/productDetails");
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -146,7 +146,7 @@ module.exports = {
       res.redirect("/admin/productDetails");
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -159,7 +159,7 @@ module.exports = {
       res.redirect("/admin/productDetails");
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -167,13 +167,15 @@ module.exports = {
 
   getShopPage: async (req, res) => {
     try {
-      let category = await categories.find();
-      let product = await products.find({ delete: false }).populate("category");
-      let productCount = await products.find({ delete: false }).count();
+      const page = req.query.p || 0
+      const productPerPage = 1
+      const category = await categories.find();
+      const product = await products.find({ delete: false }).skip(page * productPerPage).limit(productPerPage).populate("category");
+      const productCount = await products.find({ delete: false }).count();
       res.render("user/shop", { product, category, productCount });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -214,7 +216,7 @@ module.exports = {
       });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 
@@ -229,7 +231,7 @@ module.exports = {
       });
     } catch (error) {
       console.log(error);
-      res.render("user/error");
+      next(error)
     }
   },
 };

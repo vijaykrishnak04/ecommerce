@@ -5,6 +5,7 @@
   <%- include ("../partials/userHeader") %>
   <style>
     @media (min-width: 720px) {
+
       *,
       ::after,
       ::before {
@@ -17,15 +18,11 @@
   <!-- Start Banner Area -->
   <section class="banner-area organic-breadcrumb">
     <div class="container">
-      <div
-        class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end"
-      >
+      <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
         <div class="col-first">
           <h1>Order Details</h1>
           <nav class="d-flex align-items-center">
-            <a href="/"
-              >Home<span class="lnr lnr-arrow-right"></span
-            ></a>
+            <a href="/">Home<span class="lnr lnr-arrow-right"></span></a>
             <a href="/orderDetails">Order Details</a>
           </nav>
         </div>
@@ -38,21 +35,14 @@
   <section class="order_details section_gap">
     <div class="container">
       <div class="col-12">
-        <div
-          class="card"
-          style="border-radius: 10px"
-          style="background: #ffd06a"
-        >
+        <div class="card" style="border-radius: 10px" style="background: #ffd06a">
           <div class="card-header px-4 py-5" style="background: #efb83f">
             <h5 class="text-muted mb-0">
               Thanks for your Order,
               <span style="color: #ffffff"><%=productData[0]?.name%> !</span>
             </h5>
           </div>
-          <div
-            class="card-body p-4"
-            style="background: #3f2512; border-radius: 10px"
-          >
+          <div class="card-body p-4" style="background: #3f2512; border-radius: 10px">
             <div class="d-flex justify-content-between align-items-center mb-4">
               <p class="lead fw-normal mb-0" style="color: #ffffff">
                 All orders
@@ -64,99 +54,77 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-2">
-                    <img
-                      src="/<%= product.productDetail.image[0].path %>"
-                      class="img-fluid"
-                      alt="Product image"
-                    />
-                    <a
-                      href="/orderedProduct/<%= product._id %>"
-                      style="text-decoration: #a8729a;"
-                      >Track
+                    <img src="/<%= product.productDetail.image[0].path %>" class="img-fluid" alt="Product image" />
+                    <a href="/orderedProduct/<%= product._id %>" style="text-decoration: #a8729a;">Track
                     </a>
                   </div>
-                  <div
-                    class="col-md-2 text-center d-flex justify-content-center align-items-center"
-                  >
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
                     <p class="mb-0"><%=product.productDetail.name%></p>
                   </div>
-                  <div
-                    class="col-md-2 text-center d-flex justify-content-center align-items-center"
-                  >
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
                     <p class="mb-0">
                       <%= product.category_name.category_name %>
                     </p>
                   </div>
-                  <div
-                    class="col-md-2 text-center d-flex justify-content-center align-items-center"
-                  >
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
                     <p class="text-muted mb-0">
                       Payment: <%= product.paymentMethod %>
                     </p>
                   </div>
-                  <div
-                    class="col-md-2 text-center d-flex justify-content-center align-items-center"
-                  >
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
                     <p class="text-muted mb-0">
                       <% if(product.orderStatus=='Placed'
                       ||product.orderStatus=='Pending'
                       ||product.orderStatus=='Shipped'||product.orderStatus=='Out for delivery'
                       ){ %>
-                      <a
-                        data-bs-toggle="modal"
-                        class="btn btn-outline-danger"
-                        data-bs-target="#exampleModal-<%=product._id%>"
-                      >
+                      <a data-bs-toggle="modal" class="btn btn-outline-danger" data-bs-target="#exampleModal-<%=product._id%>">
                         Cancel
                       </a>
                       <% }else if(product.orderStatus=='Delivered'){%>
                       <b>Delivered</b>
+                      <% }else if(product.orderStatus=='Requested to cancel'){%>
+                      <b>Requested to cancel</b>
                       <% }else {%>
-                        <b>Order Cancelled</b>
+                      <b>Order Cancelled</b>
                       <% } %>
-                      <!-- Modal -->
                     </p>
 
-                    <div
-                      class="modal fade modal-centered"
-                      id="exampleModal-<%=product._id%>"
-                      tabindex="-1"
-                      aria-labelledby="exampleModalLabel"
-                    >
+
+                    <!-- Modal -->
+
+                    <div class="modal fade modal-centered" id="exampleModal-<%=product._id%>" tabindex="-1" aria-labelledby="exampleModalLabel">
                       <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                           <div class="modal-header">
                             <h1 class="modal-title fs-5" id="exampleModalLabel">
                               Confirmation
                             </h1>
-
                           </div>
-                          <div class="modal-body">
-                            Are you sure you want to cancel this order ?
-                          </div>
-                          <div class="modal-footer">
-                            <button
-                              type="button"
-                              class="btn btn-secondary"
-                              data-bs-dismiss="modal"
-                            >
-                              Close
-                            </button>
-                            <a href="/cancelOrder/<%=product._id%>"
-                              ><button type="button" class="btn btn-danger">
+                          <form action="/cancelOrder" method="post">
+                            <div class="modal-body">
+                              Are you sure you want to cancel this order ?
+                              <label for="cancelReason">Reason for cancellation:</label>
+                              <textarea id="cancelReason" name="reason"></textarea>
+                              <input type="hidden" name="orderId" value="<%=product._id%>">
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Close
+                              </button>
+                              <button type="submit" class="btn btn-danger">
                                 Cancel
-                              </button></a
-                            >
-                          </div>
+                              </button>
+                            </div>
+                          </form>
                         </div>
                       </div>
                     </div>
+
+                    <!-- End Modal -->
+
                   </div>
                 </div>
-                <hr
-                  class="mb-4"
-                  style="background-color: #e0e0e0; opacity: 1"
-                />
+                <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1" />
                 <div class="row d-flex align-items-center">
                   <div class="col-md-2">
                     <p class="text-muted mb-0">
@@ -191,4 +159,5 @@
 
   <!-- start footer Area -->
   <%- include ("../partials/userFooter") %>
+
 </body>

@@ -2,6 +2,8 @@ const cart = require("../model/cartSchema");
 const users = require("../model/userSchema");
 const order = require("../model/orderSchema");
 const coupon = require("../model/couponSchema");
+const requests = require('../model/requestSchema')
+const products = require("../model/productSchema");
 const moment = require("moment");
 const mongoose = require("mongoose");
 const promise = require("promise");
@@ -36,7 +38,7 @@ function checkCoupon(data, id) {
 }
 
 module.exports = {
-  getCheckOutPage: async (req, res) => {
+  getCheckOutPage: async (req, res, next) => {
     try {
       let session = req.session.user;
       const userData = await users.findOne({ email: session });
@@ -109,7 +111,7 @@ module.exports = {
     }
   },
 
-  placeOrder: async (req, res) => {
+  placeOrder: async (req, res, next) => {
     try {
       let invalid;
       let couponDeleted;
@@ -215,7 +217,7 @@ module.exports = {
               const orderDatas = await orderData.save()
               const orderId = orderDatas._id
 
-              await order.updateOne({ _id: orderId }, { $set: { orderStatus: 'Placed' } }).then(() => {
+              await order.updateOne({ _id: orderId }, { $set: { orderStatus: 'Placed' } }).then(async () => {
 
                 res.json({ success: true });
 
@@ -223,6 +225,16 @@ module.exports = {
                   { couponName: data.coupon },
                   { $push: { users: { userId: objId } } }
                 )
+
+                const result = await Promise.all(
+                  productData.map(async (x) => {
+                    const updatedProduct = await products.updateOne(
+                      { _id: x.productItem },
+                      { $inc: { stock: -1 * x.productQuantity } }
+                    );
+                    return updatedProduct;
+                  })
+                );
 
               })
 
@@ -342,7 +354,7 @@ module.exports = {
     }
   },
 
-  verifyPayment: async (req, res) => {
+  verifyPayment: async (req, res, next) => {
     try {
       const details = req.body;
       const orderId = details['payment[razorpay_order_id]'];
@@ -382,7 +394,7 @@ module.exports = {
     }
   },
 
-  orderSuccess: async (req, res) => {
+  orderSuccess: async (req, res, next) => {
     try {
       res.render("user/orderSuccess", { countInCart, countInWishlist });
       console.log(req.session.user);
@@ -395,7 +407,7 @@ module.exports = {
     }
   },
 
-  orderDetails: async (req, res) => {
+  orderDetails: async (req, res, next) => {
     try {
       const session = req.session.user;
       const userData = await users.findOne({ email: session });
@@ -478,7 +490,7 @@ module.exports = {
     }
   },
 
-  orderedProduct: async (req, res) => {
+  orderedProduct: async (req, res, next) => {
     try {
       const id = req.params.id;
       const session = req.session.user;
@@ -547,10 +559,18 @@ module.exports = {
     }
   },
 
-  getOrders: async (req, res) => {
+  getOrders: async (req, res, next) => {
+    const status = null
     try {
       order
         .aggregate([
+          {
+            $match: {
+              orderStatus: {
+                $nin: ["delivered", "cancelled"]
+              }
+            },
+          },
           {
             $lookup: {
               from: "products",
@@ -574,7 +594,7 @@ module.exports = {
           },
         ])
         .then((orderDetails) => {
-          res.render("admin/orders", { orderDetails });
+          res.render("admin/orders", { orderDetails, status });
         });
     } catch (error) {
       console.log(error);
@@ -582,7 +602,89 @@ module.exports = {
     }
   },
 
-  getOrderedProduct: async (req, res) => {
+  getDeliveredOrders: async (req, res, next) => {
+    const status = "Delivered"
+    try {
+      order
+        .aggregate([
+          {
+            $match: {
+              orderStatus: "delivered"
+            },
+          },
+          {
+            $lookup: {
+              from: "products",
+              localField: "orderItems.productId",
+              foreignField: "_id",
+              as: "product",
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "userId",
+              foreignField: "_id",
+              as: "users",
+            },
+          },
+          {
+            $sort: {
+              createdAt: -1,
+            },
+          },
+        ])
+        .then((orderDetails) => {
+          res.render("admin/orders", { orderDetails, status });
+        });
+    } catch (error) {
+      console.log(error);
+      next(error)
+    }
+  },
+
+  getCancelledOrders: async (req, res, next) => {
+    const status = "Cancelled"
+    try {
+      order
+        .aggregate([
+          {
+            $match: {
+              orderStatus: "cancelled"
+            },
+          },
+          {
+            $lookup: {
+              from: "products",
+              localField: "orderItems.productId",
+              foreignField: "_id",
+              as: "product",
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "userId",
+              foreignField: "_id",
+              as: "users",
+            },
+          },
+          {
+            $sort: {
+              createdAt: -1,
+            },
+          },
+        ])
+        .then((orderDetails) => {
+          res.render("admin/orders", { orderDetails, status });
+        });
+    } catch (error) {
+      console.log(error);
+      next(error)
+    }
+  },
+
+  getOrderedProduct: async (req, res, next) => {
     try {
       const id = req.params.id;
 
@@ -648,6 +750,41 @@ module.exports = {
 
   cancelOrder: async (req, res, next) => {
     try {
+
+      const orderId = req.body.orderId
+      requests.create({
+
+        order: orderId,
+        message: req.body.reason
+
+      }).then(async () => {
+
+        await order.updateOne({ _id: orderId }, { $set: { orderStatus: "Requested to cancel" } })
+        res.redirect('/orderDetails')
+
+      })
+
+
+    } catch (error) {
+      console.log(error);
+      next(error)
+    }
+
+  },
+
+  getRequests: async (req, res, next) => {
+    try {
+      const requestData = await requests.find({status:{$ne:"accepted"}}).populate("order")
+      console.log(requestData);
+      res.render('admin/requests', { requestData })
+    } catch (error) {
+      console.log(error);
+      next(error)
+    }
+  },
+
+  acceptCancel: async (req, res, next) => {
+    try {
       const data = req.params.id;
       const orderData = await order.findOne({ _id: data })
       const userData = await users.findOne({ _id: orderData.userId });
@@ -666,18 +803,21 @@ module.exports = {
           { _id: orderData.userId },
           { $set: { walletTotal: updatedWalletTotal, walletDetails: updatedWalletDetails } }
         );
+        res.redirect("/admin/requests");
       }
 
       await order.updateOne({ _id: data }, { $set: { orderStatus: "cancelled" } })
-      res.redirect("/orderDetails");
+      await requests.updateOne({ order: data },{$set:{status:"accepted"}})
+      res.redirect("/admin/requests");
 
-    } catch (err) {
-      next(err)
+    } catch (error) {
+      console.log(error);
+      next(error)
     }
 
   },
 
-  orderStatusChanging: async (req, res) => {
+  orderStatusChanging: async (req, res, next) => {
     try {
       const id = req.params.id;
       const data = req.body;

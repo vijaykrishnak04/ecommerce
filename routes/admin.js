@@ -83,6 +83,14 @@ adminRouter.get('/removeCoupon/:id',verifylogin.verifyLoginAdmin,couponControlle
 
 adminRouter.get('/order',verifylogin.verifyLoginAdmin,orderController.getOrders)
 
+adminRouter.get('/deliveredOrder',verifylogin.verifyLoginAdmin,orderController.getDeliveredOrders)
+
+adminRouter.get('/cancelledOrder',verifylogin.verifyLoginAdmin,orderController.getCancelledOrders)
+
+adminRouter.get('/requests',verifylogin.verifyLoginAdmin,orderController.getRequests)
+
+adminRouter.get('/acceptCancel/:id',verifylogin.verifyLoginAdmin,orderController.acceptCancel)
+
 adminRouter.get('/orderedProduct/:id',verifylogin.verifyLoginAdmin,orderController.getOrderedProduct)
 
 adminRouter.post('/orderStatuschange/:id',orderController.orderStatusChanging)

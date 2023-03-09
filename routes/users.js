@@ -98,7 +98,7 @@ router.get('/orderDetails', verifyLogin.verifyLoginUser,orderController.orderDet
 
 router.get('/orderedProduct/:id',verifyLogin.verifyLoginUser,orderController.orderedProduct);
 
-router.get('/cancelOrder/:id',verifyLogin.verifyLoginUser,orderController.cancelOrder);
+router.post('/cancelOrder',verifyLogin.verifyLoginUser,orderController.cancelOrder);
 
 router.get('/getAddressDetails/:userId',verifyLogin.verifyLoginUser,orderController.fetchAddress)
 

@@ -4,7 +4,12 @@
 <div class="content-wrapper">
   <div class="container-xxl flex-grow-1 container-p-y">
     <div class="card">
-      <h5 class="card-header">Bordered Table</h5>
+      <h5 class="card-header">
+        <% if (status) { %>
+        <%= status  %>
+        <% } else { %> Running orders
+        <% } %>
+      </h5>
       <div class="card-body">
         <div class="table-responsive text-nowrap">
           <table class="table table-bordered">
@@ -17,14 +22,14 @@
                 <th scope="col">Order status</th>
                 <th scope="col">Delivery date</th>
                 <th scope="col">Total amount</th>
-                <th scope="col">Order controlls</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
               <% orderDetails.forEach((order)=>{ %>
               <tr>
                 <td>
-                  <%= order.name %>
+                  <a href="/admin/orderedProduct/<%=order._id%> "><%= order.name %></a>
                 </td>
 
                 <td>
@@ -60,7 +65,7 @@
                   </div>
 
                   <!-- Modal -->
-                  
+
                   <div class="modal fade" id="exampleModal-<%= order._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                       <div class="modal-content">

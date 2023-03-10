@@ -416,7 +416,12 @@ module.exports = {
       const productData = await order
         .aggregate([
           {
-            $match: { userId: objId },
+            $match: {
+              $and: [
+                { userId: objId },
+                { orderStatus: { $nin: ["Cancelled", "Delivered"] } }
+              ]
+            }
           },
           {
             $unwind: "$orderItems",
@@ -475,12 +480,78 @@ module.exports = {
           },
         ])
         .sort({ createdAt: -1 });
-      const orderDetails = await order
-        .find({ userId: userData._id })
+
+      const previousData = await order
+        .aggregate([
+          {
+            $match: {
+              $and: [
+                { userId: objId },
+                { orderStatus: { $in: ["Cancelled", "Delivered"] } }
+              ]
+            }
+          },
+          {
+            $unwind: "$orderItems",
+          },
+          {
+            $project: {
+              productItem: "$orderItems.productId",
+              productQuantity: "$orderItems.quantity",
+              address: 1,
+              name: 1,
+              phonenumber: 1,
+              totalAmount: 1,
+              orderStatus: 1,
+              paymentMethod: 1,
+              paymentStatus: 1,
+              orderDate: 1,
+              deliveryDate: 1,
+              createdAt: 1,
+            },
+          },
+          {
+            $lookup: {
+              from: "products",
+              localField: "productItem",
+              foreignField: "_id",
+              as: "productDetail",
+            },
+          },
+          {
+            $project: {
+              productItem: 1,
+              productQuantity: 1,
+              name: 1,
+              phoneNumber: 1,
+              address: 1,
+              totalAmount: 1,
+              orderStatus: 1,
+              paymentMethod: 1,
+              paymentStatus: 1,
+              orderDate: 1,
+              deliveryDate: 1,
+              createdAt: 1,
+              productDetail: { $arrayElemAt: ["$productDetail", 0] },
+            },
+          },
+          {
+            $lookup: {
+              from: "categories",
+              localField: "productDetail.category",
+              foreignField: "_id",
+              as: "category_name",
+            },
+          },
+          {
+            $unwind: "$category_name",
+          },
+        ])
         .sort({ createdAt: -1 });
+
       res.render("user/orderDetails", {
         productData,
-        orderDetails,
+        previousData,
         countInCart,
         countInWishlist,
       });
@@ -567,7 +638,7 @@ module.exports = {
           {
             $match: {
               orderStatus: {
-                $nin: ["delivered", "cancelled"]
+                $nin: ["Delivered", "Cancelled"]
               }
             },
           },
@@ -609,7 +680,7 @@ module.exports = {
         .aggregate([
           {
             $match: {
-              orderStatus: "delivered"
+              orderStatus: "Delivered"
             },
           },
           {
@@ -650,7 +721,7 @@ module.exports = {
         .aggregate([
           {
             $match: {
-              orderStatus: "cancelled"
+              orderStatus: "Cancelled"
             },
           },
           {
@@ -774,7 +845,7 @@ module.exports = {
 
   getRequests: async (req, res, next) => {
     try {
-      const requestData = await requests.find({status:{$ne:"accepted"}}).populate("order")
+      const requestData = await requests.find({ status: { $ne: "accepted" } }).populate("order")
       console.log(requestData);
       res.render('admin/requests', { requestData })
     } catch (error) {
@@ -806,8 +877,8 @@ module.exports = {
         res.redirect("/admin/requests");
       }
 
-      await order.updateOne({ _id: data }, { $set: { orderStatus: "cancelled" } })
-      await requests.updateOne({ order: data },{$set:{status:"accepted"}})
+      await order.updateOne({ _id: data }, { $set: { orderStatus: "Cancelled" } })
+      await requests.updateOne({ order: data }, { $set: { status: "accepted" } })
       res.redirect("/admin/requests");
 
     } catch (error) {

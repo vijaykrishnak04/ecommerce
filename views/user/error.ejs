@@ -1,28 +1,25 @@
 <%- include ("../layout/layout2") %>
 
-    <body class="mt-5 pt-5">
-        <div class="d-flex align-items-center justify-content-center vh-100 mt-5 pt-5">
-            <div class="text-center row">
-                <div class=" col-md-6">
-                    <img src="https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569__340.jpg" alt=""
-                        class="img-fluid">
-                </div>
-                
-                <div class=" col-md-6 mt-5">
-                    <% if (locals.error) { %>
-                     
-                   
-                    <p class="fs-3"><span class="text-danger">Opps! <%= error %> </span></p>
-                    <% } %>
-                    <p class="lead">
-                        The page you’re looking for doesn’t exist.
-                    </p>
-                    <a onclick="window.history.back()" class="btn btn-outline-danger">Go Back</a>
-                </div>
-         
+<body class="mt-5 pt-5">
+  <div
+    class="d-flex align-items-center justify-content-center vh-100 mt-5 pt-5"
+  >
+    <div class="text-center row">
+      <div class="col-md-6">
+        <img
+          src="https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569__340.jpg"
+          alt=""
+          class="img-fluid"
+        />
+      </div>
 
-            </div>
-        </div>
-    </body>
-
-</html>
+      <div class="col-md-6 mt-5">
+        <p class="fs-3"><span class="text-danger">Opps!</span></p>
+        <p class="lead">The page you’re looking for doesn’t exist.</p>
+        <a onclick="window.history.back()" class="btn btn-outline-danger"
+          >Go Back</a
+        >
+      </div>
+    </div>
+  </div>
+</body>

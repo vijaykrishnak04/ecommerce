@@ -168,7 +168,7 @@ module.exports = {
   getShopPage: async (req, res) => {
     try {
       const page = req.query.p || 0
-      const productPerPage = 1
+      const productPerPage = 4
       const category = await categories.find();
       const product = await products.find({ delete: false }).skip(page * productPerPage).limit(productPerPage).populate("category");
       const productCount = await products.find({ delete: false }).count();

@@ -8,7 +8,7 @@ const categorySchema = new Schema({
     },
     category_Image: {
         type: String,
-        required: true
+        default:false,
     },
     delete: {
         type: Boolean,

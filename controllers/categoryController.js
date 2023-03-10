@@ -29,7 +29,7 @@ module.exports = {
         } else {
           const category = new categories({
             category_name: req.body.name,
-            category_Image: req.file.filename
+            category_Image: req.file?.filename
           });
           await category.save();
           res.redirect("/admin/category");

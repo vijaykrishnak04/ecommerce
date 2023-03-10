@@ -29,14 +29,22 @@ module.exports = {
         customer = false;
       }
       res.render("user/home", { customer, product, bannerData, category, carousalData });
-    } catch(error) {
+    } catch (error) {
       console.log(error);
       next(error)
     }
   },
+  
   //to render the login page
   getLogin: (req, res) => {
-    res.render("user/login");
+
+    const session = req.session.user;
+    if (session) {
+      customer = true;
+    } else {
+      customer = false;
+    }
+    res.render("user/login",{customer});
   },
 
   postLogin: async (req, res) => {

@@ -47,7 +47,7 @@ module.exports = {
                 password: hashpass,
                 department: req.body.department,
             }).then(function () {
-                res.redirect("/admin/userDetails");
+                res.redirect("/admin/staffDetails");
             }).catch((err) => {
                 console.log(err + "staff adding failed");
             });

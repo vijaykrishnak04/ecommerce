@@ -22,7 +22,7 @@ module.exports = {
       const bannerData = await banner.find({ isDeleted: false }).sort({ createdAt: -1 }).limit(1);
       const carousalData = await carousal.find({ isDeleted: false }).sort({ createdAt: -1 });
       console.log(carousalData);
-      const category = await categories.find({category_Image:true}).limit(4);
+      const category = await categories.find({ category_Image: { $ne: false } }).limit(4);
       if (session) {
         customer = true;
       } else {
@@ -34,7 +34,7 @@ module.exports = {
       next(error)
     }
   },
-  
+
   //to render the login page
   getLogin: (req, res) => {
 
@@ -44,7 +44,7 @@ module.exports = {
     } else {
       customer = false;
     }
-    res.render("user/login",{customer});
+    res.render("user/login", { customer });
   },
 
   postLogin: async (req, res) => {

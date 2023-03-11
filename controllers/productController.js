@@ -17,7 +17,7 @@ module.exports = {
 
   addProduct: async (req, res) => {
     try {
-      const category = await categories.find();
+      const category = await categories.find({delete:false});
       res.render("admin/addProduct", { category: category });
     } catch (error) {
       console.log(error);

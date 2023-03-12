@@ -70,7 +70,7 @@ module.exports = {
           res.render("user/login", { invalid: "You are blocked" });
         }
       } else {
-        res.render("user/login", { invalid: "Invalid Email Or Password" });
+        res.render("user/login", { invalid: "User with this email not exist" });
       }
     } catch (error) {
       console.log(error);

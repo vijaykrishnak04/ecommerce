@@ -29,9 +29,7 @@
               <small id="couponNameError" class="text-danger err"></small>
             </div>
 
-            <button class="btn btn-success mt-4" type="submit">
-              Submit
-            </button>
+            <button class="btn btn-success mt-4" type="submit">Submit</button>
           </div>
         </form>
       </div>
@@ -119,10 +117,10 @@
                   Restore
                 </button>
                 <%}%>
-                          <!-- Modal -->
-                          <div
-                            class="modal fade"
-                            id="exampleModal-<%=element._id%>"
+                <!-- Modal -->
+                <div
+                  class="modal fade"
+                  id="exampleModal-<%=element._id%>"
                 tabindex="-1"
                 aria-labelledby="exampleModalLabel"
                 aria-hidden="true"
@@ -144,15 +142,15 @@
                       Are you sure you want to restore banner details?
                     </div>
                     <%}%>
-                                <div class="modal-footer">
-                                  <button
-                                    type="button"
-                                    class="btn btn-secondary"
-                                    data-bs-dismiss="modal"
-                                  >
-                                    Close
-                                  </button>
-                                  <% if(element.isDeleted===false) { %>
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                        >
+                          Close
+                        </button>
+                        <% if(element.isDeleted===false) { %>
                     <a href="/admin/deleteBanner/<%=element._id%>"><button type="button" class="btn btn-danger">
                         Delete
                       </button></a>
@@ -161,20 +159,18 @@
                         Restore
                       </button></a>
                     <%}%>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <% count++ %> <% }) %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <% count++ %> <% }) %>
           </tbody>
         </table>
       </div>
     </div>
-
   </div>
-
 </div>
 
 <!-- Content wrapper -->
@@ -189,21 +185,24 @@
     let errors = false;
 
     if (offerType.trim() === "") {
-      document.getElementById("offerTypeError").innerHTML = "Please enter an offer type";
+      document.getElementById("offerTypeError").innerHTML =
+        "Please enter an offer type";
       errors = true;
     } else {
       document.getElementById("offerTypeError").innerHTML = "";
     }
 
     if (bannerText.trim() === "") {
-      document.getElementById("bannerTextError").innerHTML = "Please enter banner text";
+      document.getElementById("bannerTextError").innerHTML =
+        "Please enter banner text";
       errors = true;
     } else {
       document.getElementById("bannerTextError").innerHTML = "";
     }
 
     if (couponName.trim() === "") {
-      document.getElementById("couponNameError").innerHTML = "Please enter a coupon code";
+      document.getElementById("couponNameError").innerHTML =
+        "Please enter a coupon code";
       errors = true;
     } else {
       document.getElementById("couponNameError").innerHTML = "";
@@ -219,21 +218,24 @@
     let errors = false;
 
     if (offerType.trim() === "") {
-      document.getElementById("editofferTypeError").innerHTML = "Please enter an offer type";
+      document.getElementById("editofferTypeError").innerHTML =
+        "Please enter an offer type";
       errors = true;
     } else {
       document.getElementById("editofferTypeError").innerHTML = "";
     }
 
     if (bannerText.trim() === "") {
-      document.getElementById("editBannerTextError").innerHTML = "Please enter banner text";
+      document.getElementById("editBannerTextError").innerHTML =
+        "Please enter banner text";
       errors = true;
     } else {
       document.getElementById("editBannerTextError").innerHTML = "";
     }
 
     if (couponName.trim() === "") {
-      document.getElementById("editCouponNameError").innerHTML = "Please enter a coupon code";
+      document.getElementById("editCouponNameError").innerHTML =
+        "Please enter a coupon code";
       errors = true;
     } else {
       document.getElementById("editCouponNameError").innerHTML = "";

@@ -306,7 +306,9 @@
 
   <%- include ("../partials/userFooter") %>
   <script>
+    
     function validateaddress() {
+
       const phone = document.getElementById("phone").value;
       const housename = document.getElementById("housename").value;
       const area = document.getElementById("area").value;
@@ -319,8 +321,7 @@
       let errors = false;
 
       if (phone.trim() === "") {
-        document.getElementById("phoneError").innerHTML =
-          "Please enter a valid phone number";
+        document.getElementById("phoneError").innerHTML = "Please enter a valid phone number";
         errors = true;
       } else {
         document.getElementById("phoneError").innerHTML = "";
@@ -335,6 +336,7 @@
       }
 
       return !errors;
+
     }
 
     async function updateAddressDetails(addressId) {
